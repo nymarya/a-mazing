@@ -9,30 +9,39 @@ class Maze{
 
 	private:
 
-		std::vector< std::string > map;
-		std::size_t m_rolls;
-		std::size_t m_cols; 
-		std::size_t m_start_roll;
-		std::size_t m_start_col;
+		std::vector< std::string > map; //<! mapa
+		std::size_t m_rolls;			//<! quantidade de linhas
+		std::size_t m_cols; 			//<! quantidade de colunas
+		std::size_t m_start_roll;		//<! linha inicial
+		std::size_t m_start_col;		//<! coluna inicial
 
 	public:
 
 		struct Position{
-			int roll;
-			int col;
+			int roll; //<! linha do mapa 
+			int col;  //<! coluna do mapa
 		};
 
 		enum class direction_t : int
         {
-            NORTH = 0,  // ( 0, -1). => (-1, 0)
+            NORTH = 0,  // ( 0, -1) => (-1, 0)
             SOUTH,      // ( 0,  1) => (1, 0)
             EAST,       // (-1,  0) => (0, -1)
             WEST,       // ( 1,  0) => (0, 1)
 		};
 
+		// * -> posição inicial
+		// # -> parede
+		// . -> parede invisível
+		// $ -> saída
+		// x -> já passou e é válido
+		// / -> sem saída
+		// " " -> não foi vizitado
+
+
 		struct Direction{
-			std::size_t height;
-			std::size_t weight;
+			std::size_t height; //<! 
+			std::size_t weight; //<! 
 		};
 
 		Maze();
