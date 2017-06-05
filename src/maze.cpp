@@ -36,6 +36,10 @@ void Maze::load( std::string filename){
     }
 }
 
+void Maze::mark_cell(const Position& pos ){
+    
+}
+
 void Maze::render(){
 
     for( auto i( map.begin() ); i != map.end(); ){
