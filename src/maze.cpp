@@ -26,8 +26,8 @@ void Maze::load( std::string filename){
         stream >> m_cols;
         stream >> m_rolls;
 
-        size_t roll = 1;
-        size_t col  = 0;
+        size_t roll = 1; //<! linha do mapa que se está verificando
+        size_t col  = 0; //<! coluna do mapa que se está verificando
 
         //Guarda os simbolos
         while(file.get() != EOF){
@@ -64,7 +64,15 @@ Maze::Position Maze::get_start_position()
     return aux;
 }
 
-// bool Maze::is_outside(const Position& pos);
+bool Maze::is_outside(const Position& pos)
+{
+    auto r = pos.roll;
+    auto c = pos.col;
+
+    if ( map[r][c] == "." ) return true;
+
+    return  false;
+}
 
 // bool is_blocked(const Position& pos, const Direction& dir);
 
