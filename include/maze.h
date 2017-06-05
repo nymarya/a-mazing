@@ -35,7 +35,7 @@ class Maze{
 		// . -> parede invisível
 		// $ -> saída
 		// x -> já passou e é válido
-		// / -> sem saída
+		// / -> já visitou e não é válido
 		// " " -> não foi vizitado
 
 

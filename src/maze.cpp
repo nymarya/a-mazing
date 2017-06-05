@@ -59,9 +59,7 @@ void Maze::load( std::string filename){
                      
             }
 
-            col++;
-
-                map.push_back( s );      
+                col++;   
             }    
         
         map.push_back( s ); 
@@ -115,6 +113,8 @@ void Maze::render(){
     for( auto i( 0ul ); i < m_rolls; i++){
         for(auto j(0ul); j< m_cols; ++j)
             std::cout << map[i][j];
+
+        std::cout << std::endl;
     }
 }
 
