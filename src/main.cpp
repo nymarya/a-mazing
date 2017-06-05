@@ -10,15 +10,19 @@ bool solve_maze( const Maze& mz, const Position pos){
 
 }
 
-int main(){
+int main(int arcg, char** argv){
 
 	Maze mz;
 
 	//Validar argumentos
 
 	//Caregar labirinto
-	mz.load_board(argv[1]);
-	if(solve_maze( mz, mz.get_start_position() ) ){
+	mz.load(argv[1]);
+	//if(solve_maze( mz, mz.get_start_position() ) ){
 		//soluçao encontrada
-	}
+	//}
+
+	mz.render();
+
+	return 0;
 }
