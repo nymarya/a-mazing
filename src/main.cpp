@@ -49,7 +49,7 @@ int main(int arcg, char** argv){
 
 	mz.render();
 
-	assert( mz.is_marked(pos));
+	assert( mz.is_marked(pos) == false);
 
 	mz.unmark_cell(pos);
 

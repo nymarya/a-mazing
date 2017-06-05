@@ -96,7 +96,7 @@ bool Maze::is_blocked(const Position& pos, const Direction& dir)
 }
 
 void Maze::mark_cell(const Position& pos ){
-    if(not is_marked(pos) )
+    if(not is_marked(pos) and not is_wall(pos))
         map[ pos.roll ][ pos.col ] = 'x';
 }
 
@@ -105,8 +105,12 @@ bool Maze::is_marked(const Position& pos){
 }
 
 void Maze::unmark_cell(const Position& pos ){
-    if(is_marked(pos) )
+    if(is_marked(pos) and not is_wall(pos))
         map[ pos.roll ][ pos.col ] = ' ';
+}
+
+bool Maze::is_wall( const Position& pos ){
+    return (map[ pos.roll ][ pos.col ] == '#' or map[ pos.roll ][ pos.col ]=='.');
 }
 
 void Maze::render(){

@@ -55,6 +55,8 @@ class Maze{
 		void unmark_cell(const Position& pos );
 		bool is_marked(const Position& pos);
 
+		bool is_wall(const Position& pos);
+
 		void render();
 };
 
