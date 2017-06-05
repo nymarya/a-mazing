@@ -33,7 +33,7 @@ void Maze::load( std::string filename){
         std::string s;
         //Guarda os simbolos
         while(file.get() != EOF){
-            //<! avança a coluna
+
             file.unget();
             char ch = file.get();
             s.push_back( ch );
@@ -57,6 +57,7 @@ void Maze::load( std::string filename){
                 }
                      
             }
+
             col++;
         }
         map.push_back( s ); 
@@ -77,18 +78,29 @@ bool Maze::is_outside(const Position& pos)
     auto r = pos.roll;
     auto c = pos.col;
 
-    //if ( map[r][c] == "." ) return true;
+    if ( 
+
+        ;map[r][c] == '.' ) return true;
 
     return  false;
 }
 
-// bool is_blocked(const Position& pos, const Direction& dir);
+bool Maze::is_blocked(const Position& pos, const Direction& dir)
+{
+    auto r = pos.roll + dir.height;
+    auto c = pos.col + dir.weight;
+
+    if ( map[r][c] == '#' ) return true;
+
+    return false;
+}
 
 void Maze::mark_cell(const Position& pos ){
      auto location = pos.roll * m_cols + pos.col-1;
 
     std::cout << map[ pos.roll ][ pos.col ] << std::endl;
 }
+
 void Maze::render(){
     for( auto i( 0ul ); i < m_rolls; i++){
         for(auto j(0ul); j< m_cols; ++j){
