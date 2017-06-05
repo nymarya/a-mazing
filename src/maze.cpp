@@ -71,7 +71,9 @@ bool Maze::is_outside(const Position& pos)
     auto r = pos.roll;
     auto c = pos.col;
 
-    if ( map[r][c] == '.' ) return true;
+    if ( 
+
+        ;map[r][c] == '.' ) return true;
 
     return  false;
 }
@@ -89,6 +91,7 @@ bool Maze::is_blocked(const Position& pos, const Direction& dir)
 void Maze::mark_cell(const Position& pos ){
     
 }
+
 void Maze::render(){
 
     for( auto i( map.begin() ); i != map.end(); ){

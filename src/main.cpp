@@ -28,5 +28,14 @@ int main(int arcg, char** argv){
 
 	mz.render();
 
+	Maze::Position p;
+	p.roll = 0;
+	p.col = 2;
+
+	Maze::Direction d;
+	d.height = 0;
+	d.weight = 0;
+
+	assert ( mz.is_blocked(p, d));
 	return 0;
 }
