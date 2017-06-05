@@ -2,14 +2,15 @@
 #include <cassert>
 #include "maze.h"
 
-struct Position{
-	std::size_t row;
-	std::size_t col;
-};
 
-// bool solve_maze( const Maze& mz, const Position pos){
 
-// }
+ bool solve_maze( const Maze& mz, const Maze::Position pos){
+ 	//Recupera
+ 	const Maze::Position initial = mz.get_start_position();
+
+ 	if( not mz.is_blocked())
+
+ }
 
 int main(int arcg, char** argv){
 
@@ -46,8 +47,6 @@ int main(int arcg, char** argv){
 	pos.roll-=1;
 	pos.col+=1;
 	mz.mark_cell(pos);
-
-	mz.render();
 
 	assert( mz.is_marked(pos) == false);
 

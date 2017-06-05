@@ -66,7 +66,7 @@ void Maze::load( std::string filename){
     }
 }
 
-Maze::Position Maze::get_start_position()
+Maze::Position Maze::get_start_position() const
 {
     Position aux;
     aux.roll = m_start_roll;
@@ -90,7 +90,7 @@ bool Maze::is_blocked(const Position& pos, const Direction& dir)
     auto r = pos.roll + dir.height;
     auto c = pos.col + dir.weight;
 
-    if ( map[r][c] == '#' ) return true;
+    if ( map[r][c] == '#' or map[r][c]=='.' ) return true;
 
     return false;
 }
