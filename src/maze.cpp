@@ -55,11 +55,15 @@ void Maze::load( std::string filename){
                     m_start_roll = roll;
                     m_start_col  = col;
                 }
+
                      
             }
 
             col++;
-        }
+
+                map.push_back( s );      
+            }    
+        
         map.push_back( s ); 
     }
 }
@@ -109,10 +113,8 @@ void Maze::unmark_cell(const Position& pos ){
 
 void Maze::render(){
     for( auto i( 0ul ); i < m_rolls; i++){
-        for(auto j(0ul); j< m_cols; ++j){
+        for(auto j(0ul); j< m_cols; ++j)
             std::cout << map[i][j];
-        }
-        std::cout <<std::endl;
     }
 }
 
