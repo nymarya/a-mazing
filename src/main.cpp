@@ -37,5 +37,18 @@ int main(int arcg, char** argv){
 	d.weight = 0;
 
 	assert ( mz.is_blocked(p, d));
+
+	pos.roll-=1;
+	pos.col+=1;
+	mz.mark_cell(pos);
+
+	mz.render();
+
+	assert( mz.is_marked(pos));
+
+	mz.unmark_cell(pos);
+
+	assert( mz.is_marked(pos) == false);
+
 	return 0;
 }
