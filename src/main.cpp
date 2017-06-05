@@ -6,9 +6,9 @@ struct Position{
 	std::size_t col;
 };
 
-bool solve_maze( const Maze& mz, const Position pos){
+// bool solve_maze( const Maze& mz, const Position pos){
 
-}
+// }
 
 int main(int arcg, char** argv){
 
@@ -21,6 +21,9 @@ int main(int arcg, char** argv){
 	//if(solve_maze( mz, mz.get_start_position() ) ){
 		//soluçao encontrada
 	//}
+	auto pos = mz.get_start_position();
+	std::cout << pos.roll << std::endl;
+	std::cout << pos.col << std::endl;
 
 	mz.render();
 
