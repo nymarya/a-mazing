@@ -25,6 +25,11 @@ int main(int arcg, char** argv){
 	std::cout << pos.roll << std::endl;
 	std::cout << pos.col << std::endl;
 
+	pos.col+=1;
+	pos.roll-=1;
+
+	mz.mark_cell(pos);
+
 	mz.render();
 
 	return 0;

@@ -26,7 +26,7 @@ void Maze::load( std::string filename){
         stream >> m_cols;
         stream >> m_rolls;
 
-        size_t roll = 1; //<! linha do mapa que se está verificando
+        size_t roll = 0; //<! linha do mapa que se está verificando
         size_t col  = 0; //<! coluna do mapa que se está verificando
 
         //Guarda os simbolos
@@ -45,12 +45,14 @@ void Maze::load( std::string filename){
             }
 
             //<! verifica se é a posição inicial
-            if ( s == "*")
-            {
-                m_start_roll = roll;
-                m_start_col  = col;
-            }
-            map.push_back( s );          
+            else {
+                if ( s == "*")
+                {
+                    m_start_roll = roll;
+                    m_start_col  = col;
+                }
+                map.push_back( s );      
+            }    
         }
     }
 }
@@ -77,12 +79,18 @@ bool Maze::is_outside(const Position& pos)
 // bool is_blocked(const Position& pos, const Direction& dir);
 
 void Maze::mark_cell(const Position& pos ){
-    
+    auto location = pos.roll * m_cols + pos.col-1;
+    *(map.begin()+location) = 'x';
+
+    std::cout << map[ pos.roll ][ pos.col ] << std::endl;
 }
 void Maze::render(){
-
+    auto cont(0);
     for( auto i( map.begin() ); i != map.end(); ){
         std::cout << *i++;
+        cont++;
+        if( std::distance(map.begin(), i)%m_cols == 0)
+            std::cout <<std::endl;
     }
 }
 
