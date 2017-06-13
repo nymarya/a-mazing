@@ -1,5 +1,6 @@
-*
-#Exception for Makefile, .cpp and .h
-!Makefile
-!*.cpp
-!*.h
+#Ignores build directory
+build/
+
+*.out
+*.exe
+*.json
