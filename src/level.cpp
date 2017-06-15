@@ -138,3 +138,18 @@ void Level::mark_decision ( const Position & pos )
 {
 	levels[pos.roll][pos.col] = 'd';
 }
+
+Position Level::get_start_position ()
+{
+	Position pos;
+	pos.roll = m_start_roll;
+	pos.col  = m_start_col;
+
+	return pos;
+}
+
+type_level Level::get_level ()
+{
+	return levels;
+}
+

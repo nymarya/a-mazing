@@ -28,6 +28,10 @@ int main(int arcg, char** argv){
 
 	lvl.generate_apple();
 
+	p = lvl.get_start_position();
+
+	std::cout << "l: "<< p.roll << " c: " << p.col << std::endl;
+
 	lvl.print_lvl();
 	std::cout << "apples restantes: " << lvl.get_apples() << std::endl;
 

@@ -12,6 +12,8 @@ struct Position
 	int col;  //<1 coluna do mapa
 };
 
+using type_level = std::vector<std::string>;
+
 class Level
 {
 
@@ -32,7 +34,7 @@ private:
 	size_t m_start_roll;
 	size_t m_start_col;
 	int m_apples;
-	std::vector<std::string> levels;
+	type_level levels;
 
 public:
 	
@@ -110,6 +112,20 @@ public:
 	 * @param[in]  pos   A posição
 	 */
 	void mark_decision ( const Position & pos );
+
+	/**
+	 * @brief      Pega a posição inicial da cobra
+	 *
+	 * @return     A posição inicial
+	 */
+	Position get_start_position ();
+
+	/**
+	 * @brief      Pega o level
+	 *
+	 * @return     o level atual.
+	 */
+	type_level get_level ();
 };
 
 
