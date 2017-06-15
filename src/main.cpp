@@ -7,10 +7,31 @@ int main(int arcg, char** argv){
 
 	Level lvl;
 
-	//Caregar e imprimir fase
+	//Carregar e imprimir fase
 	lvl.load(argv[1]);
 	lvl.print_lvl();
-	
+
+	Position p;
+	p.roll = 1;
+	p.col = 1;
+
+	lvl.mark_position( p );
+
+	p.roll = 2;
+	p.col = 2;
+
+	lvl.mark_notsolution(p);
+
+	p.col = 3;
+
+	lvl.mark_decision(p);
+
+	lvl.generate_apple();
+
+	lvl.print_lvl();
+	std::cout << "apples restantes: " << lvl.get_apples() << std::endl;
+
+
 	//if(solve_maze( mz, mz.get_start_position() ) ){
 	// 	//soluçao encontrada
 	// //}
