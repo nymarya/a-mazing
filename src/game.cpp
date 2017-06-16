@@ -57,15 +57,17 @@ Game::Result Game::validate( std::string filename){
 }
 
 
-Game::Result Game::initialize (std::string filename){
+void Game::initialize (std::string filename){
 
     Result result;
 
     //!< Preenche levels
     level.load( filename );
 
+    //!< Gera maçã
+    level.generate_apple();
+
     //teste
     level.print_lvl();
 
-    return result;
 }

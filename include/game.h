@@ -40,12 +40,12 @@ class Game{
          /**
           * @brief      Valida a aposta informada pelo jogador
           * @param[in]  filename  Nome do arquivo contendo os níveis
-          * @return     Sim, caso o arquivo contenha niveis validos,
-          *             não, caso contrário
+          * @return     Resultado com sucesso, caso o arquivo contenha niveis validos,
+          *             erro, caso contrário
           */
         Result validate ( std::string filename);
 
-        Result initialize (std::string filename);
+        void initialize (std::string filename);
 
         void process() const;
 
