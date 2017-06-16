@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cassert>
+#include "level.h"
 #include "maze.h"
 #include "game.h"
-
 
 
 int main(int arcg, char** argv){
@@ -18,5 +18,7 @@ int main(int arcg, char** argv){
 		return EXIT_FAILURE;
 	}
 
-	return 0;
+	game.initialize( argv[1]);
+
+	return EXIT_SUCCESS;
 }

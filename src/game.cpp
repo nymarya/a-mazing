@@ -55,3 +55,17 @@ Game::Result Game::validate( std::string filename){
 
     return result;
 }
+
+
+Game::Result Game::initialize (std::string filename){
+
+    Result result;
+
+    //!< Preenche levels
+    level.load( filename );
+
+    //teste
+    level.print_lvl();
+
+    return result;
+}

@@ -17,6 +17,9 @@ class Game{
     private:
         //Snake snake;  //!< Instancia da classe Snake
         //Player player;//!< Instancia da classe Player 
+        Level level; //!< Instancia da classe Level
+
+        unsigned int m_levels; //!< Número de levels
     
     public:
 
@@ -42,7 +45,7 @@ class Game{
           */
         Result validate ( std::string filename);
 
-        bool initialize (std::string filename);
+        Result initialize (std::string filename);
 
         void process() const;
 
