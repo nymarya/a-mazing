@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
+#include "List/include/list.h"
 
 struct Position 
 {
@@ -29,16 +30,36 @@ class Level
  */
 
 private:
-	size_t m_rolls;
-	size_t m_cols;
-	size_t m_start_roll;
-	size_t m_start_col;
-	int m_apples;
-	type_level levels;
+
+	struct data
+	{
+		size_t m_rolls;
+		size_t m_cols;
+		size_t m_start_roll;
+		size_t m_start_col;
+		int m_apples;
+		type_level lvl;
+
+		/**
+		 * @brief      Construtor básico
+		 */
+		data ( )
+			: m_rolls(0)
+			, m_cols(0)
+			, m_start_roll(0)
+			, m_start_col(0)
+			, m_apples(5)
+		{/*empty*/}
+	};
+
+	ls::list<data> levels;
+	
 
 public:
 	
 	Level();
+
+	~Level() = default;
 
 	/**
 	 * @brief      Carrega o labirinto atravez de um arquivo passafo
@@ -126,6 +147,9 @@ public:
 	 * @return     o level atual.
 	 */
 	type_level get_level ();
+
+	void next_level ();
+
 };
 
 
