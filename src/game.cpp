@@ -67,7 +67,7 @@ void Game::initialize (std::string filename){
     //!< Gera maçã
     level.generate_apple();
 
-    //teste
-    level.print_lvl();
+    //!< Gera snake
+    snake.grow( level.get_start_position() );
 
 }

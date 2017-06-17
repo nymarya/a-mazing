@@ -16,7 +16,7 @@ class Game{
 
     //=== Membros privados
     private:
-        //Snake snake;  //!< Instancia da classe Snake
+        Snake snake;  //!< Instancia da classe Snake
         //Player player;//!< Instancia da classe Player 
         Level level; //!< Instancia da classe Level
 
@@ -46,9 +46,14 @@ class Game{
           */
         Result validate ( std::string filename);
 
+        /**
+          * @brief      Inicializa os elementos do jogo
+          * @param[in]  filename  Nome do arquivo contendo os níveis
+          *
+          */
         void initialize (std::string filename);
 
-        void process() const;
+        void process_events() const;
 
         void update();
 

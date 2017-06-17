@@ -6,14 +6,26 @@
 
 //=== Classe que controla o jogo
 class Snake {
+    public:
+        enum class snake_state : int
+        {
+            RUN = 0,  
+            CRASH,      // ( 0,  1) => (1, 0)
+            DEAD,       // (-1,  0) => (0, -1)
+            WIN,       // ( 1,  0) => (0, 1)
+        };
+
     private:
         std::deque < Position > body; //!< Deque de posições que representa a cobra
         std::string head; //!< Simbolo para a cabeça da cobra
+
+        snake_state state;
 
     public:
         //=== Membros especiais
         Snake(std::string h = "\u142F")
         : head( h )
+        , state( snake_state::RUN )
         {/*empty*/}
 
         /**
