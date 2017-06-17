@@ -3,11 +3,6 @@
 
 #include <iostream>
 
-struct Position{
-    int roll; //<! linha do mapa 
-    int col;  //<! coluna do mapa
-};
-
 enum class direction_t : int
 {
     NORTH = 0,  // ( 0, -1) => (-1, 0)
@@ -22,7 +17,7 @@ enum class direction_t : int
 // $ -> saída
 // x -> já passou e é válido
 // / -> já visitou e não é válido
-// " " -> não foi vizitado
+// " " -> não foi visitado
 
 struct Direction{
     std::size_t height; //<! 
@@ -31,6 +26,18 @@ struct Direction{
     Direction( std::size_t h=0, std::size_t w=0)
     :height(h), weight(w)
     {/*empty*/}
+};
+
+struct Position{
+    int roll; //<! linha do mapa 
+    int col;  //<! coluna do mapa
+
+    Position& operator+(Direction dir){
+        roll += dir.height;
+        col += dir.weight;
+
+        return *this;
+    }
 };
 
 #endif
