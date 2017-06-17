@@ -37,6 +37,10 @@ int main(int arcg, char** argv){
 
 	lvl.next_level();
 	lvl.print_lvl();
+	lvl.next_level();
+	lvl.print_lvl();
+	lvl.next_level();
+	lvl.print_lvl();
 
 
 	//if(solve_maze( mz, mz.get_start_position() ) ){

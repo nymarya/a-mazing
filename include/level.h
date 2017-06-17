@@ -23,6 +23,7 @@ class Level
  * # -> parede
  * . -> parede invisível
  * m -> maça
+ * * -> ponto inicial
  * c -> cobra
  * x -> local vizitado
  * d -> ponto de decisão
@@ -57,8 +58,14 @@ private:
 
 public:
 	
+	/**
+	 * @brief      Construtor
+	 */
 	Level();
 
+	/**
+	 * @brief      Destroi o objeto
+	 */
 	~Level() = default;
 
 	/**

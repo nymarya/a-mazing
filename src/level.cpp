@@ -13,6 +13,7 @@ void Level::load( std::string filename )
 	//<! abre o arquivo contendo as fases
 	std::fstream file;
     file.open(filename);
+    bool ok = false; //<! verifica se o labirinto é válido.
 
     if(file.is_open()){
         while( file.get() != EOF )
@@ -22,7 +23,6 @@ void Level::load( std::string filename )
             std::string line;
             getline(file, line);
             std::stringstream stream(line);
-            
             
             //<! Guarda o numero de linhas e colunas
             size_t rolls_;
@@ -48,10 +48,11 @@ void Level::load( std::string filename )
                     if ( j <= cols_)
                     {
                         s.push_back(ch);
-                        if ( ch == 'c' )
+                        if ( ch == '*' )
                         {
                             d.m_start_roll = i;
                             d.m_start_col  = j;
+                            ok = true;
                         }
                         j++;
                     }
@@ -62,7 +63,11 @@ void Level::load( std::string filename )
                 s.clear();
             }
 
-            levels.push_back( d ); 
+            if ( ok )
+            {
+                levels.push_back( d ); 
+                ok = false;
+            }
         }
     }
 
@@ -111,60 +116,60 @@ int Level::get_apples( )
 
 void Level::generate_apple ()
 {
-    data current_lvl = levels.front();
+    auto current_lvl = levels.begin();
 
 	srand (time(NULL));
 	bool aux = true;
 	Position apple;
 	while ( aux )
 	{
-		auto r = rand() % current_lvl.m_rolls;
-		auto c = rand() % current_lvl.m_cols;
+		auto r = rand() % (*current_lvl).m_rolls;
+		auto c = rand() % (*current_lvl).m_cols;
 		apple.roll = r;
 		apple.col  = c;
 		aux = is_blocked( apple );
 	}
 
-	current_lvl.lvl[apple.roll][apple.col] = 'm';
+	(*current_lvl).lvl[apple.roll][apple.col] = 'm';
 }
 
 void Level::update_apples ()
 {
-    data current_lvl = levels.front();
-	(current_lvl.m_apples)--;
+    auto current_lvl = levels.begin();
+	((*current_lvl).m_apples)--;
 }
 
 void Level::mark_position( const Position & pos )
 {
-    data current_lvl = levels.front();
-	current_lvl.lvl[pos.roll][pos.col] = 'x';
+    auto current_lvl = levels.begin();
+	(*current_lvl).lvl[pos.roll][pos.col] = 'x';
 }
 
 void Level::mark_notsolution ( const Position & pos )
 {
-    data current_lvl = levels.front();
-	current_lvl.lvl[pos.roll][pos.col] = '/';
+    auto current_lvl = levels.begin();
+	(*current_lvl).lvl[pos.roll][pos.col] = '/';
 }
 
 void Level::mark_decision ( const Position & pos )
 {
-    data current_lvl = levels.front();
-	current_lvl.lvl[pos.roll][pos.col] = 'd';
+    auto current_lvl = levels.begin();
+	(*current_lvl).lvl[pos.roll][pos.col] = 'd';
 }
 
 Position Level::get_start_position ()
 {
-    data current_lvl = levels.front();
+    auto current_lvl = levels.begin();
 	Position pos;
-	pos.roll = current_lvl.m_start_roll;
-	pos.col  = current_lvl.m_start_col;
+	pos.roll = (*current_lvl).m_start_roll;
+	pos.col  = (*current_lvl).m_start_col;
 
 	return pos;
 }
 
 type_level Level::get_level ()
 {
-    data current_lvl = levels.front();
+    auto current_lvl = levels.front();
 	return current_lvl.lvl;
 }
 
