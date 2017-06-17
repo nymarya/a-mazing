@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-#include "List/include/list.h"
+#include "List/list.h"
 
 struct Position 
 {
