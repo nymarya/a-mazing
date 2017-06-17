@@ -35,6 +35,13 @@ int main(int arcg, char** argv){
 	lvl.print_lvl();
 	std::cout << "apples restantes: " << lvl.get_apples() << std::endl;
 
+	lvl.next_level();
+	lvl.print_lvl();
+	lvl.next_level();
+	lvl.print_lvl();
+	lvl.next_level();
+	lvl.print_lvl();
+
 
 	//if(solve_maze( mz, mz.get_start_position() ) ){
 	// 	//soluçao encontrada
