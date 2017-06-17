@@ -29,8 +29,12 @@ struct Direction{
 };
 
 struct Position{
-    int roll; //<! linha do mapa 
-    int col;  //<! coluna do mapa
+    size_t roll; //<! linha do mapa 
+    size_t col;  //<! coluna do mapa
+
+    Position( size_t r=0, size_t c=0)
+    :roll(r), col(c)
+    {/*empty*/}
 
     Position& operator+(Direction dir){
         roll += dir.height;
@@ -38,6 +42,12 @@ struct Position{
 
         return *this;
     }
+
+    bool operator==( Position rhs)
+    {
+        return (roll == rhs.roll and col == rhs.col);
+    }
+
 };
 
 #endif

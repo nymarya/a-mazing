@@ -172,6 +172,10 @@ public:
 	 */
 	int get_current_lvl ();
 
+	size_t get_rolls() const;
+
+	size_t get_cols() const;
+
 };
 
 

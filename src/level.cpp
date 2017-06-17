@@ -190,3 +190,13 @@ int Level::get_current_lvl ()
 {
     return m_current_lvl;
 }
+
+size_t Level::get_rolls () const
+{
+    return levels.front().m_rolls;
+}
+
+size_t Level::get_cols () const
+{
+    return levels.front().m_cols;
+}

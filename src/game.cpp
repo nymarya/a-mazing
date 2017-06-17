@@ -68,6 +68,94 @@ void Game::initialize (std::string filename){
     level.generate_apple();
 
     //!< Gera snake
+    snake.update_state( Snake::SnakeState::RUN );
     snake.grow( level.get_start_position() );
 
+}
+
+/// Processa eventos do jogo
+void Game::process_events( void ){
+
+    //player.find
+
+    //Se comeu todas as maças, passa de Nivel
+    if( level.get_apples() == 0 and 
+        level.get_current_lvl() != level.get_total_lvls() )
+    {
+
+        level.next_level();     //!< Muda de nível
+        level.generate_apple(); //!< Gera nova maçã
+        //player.find_solution(); //!< Busca a solução do novo nível
+    } 
+    //Se não tem mais maçãs nem níveis, fim de jogo
+    else if ( level.get_apples() == 0 and 
+              level.get_current_lvl() == level.get_total_lvls() )
+    {
+        snake.update_state( Snake::SnakeState::WIN );
+    }
+    //Se a cobra 
+    else if( snake.get_state() == Snake::SnakeState::CRASH ) 
+    {
+        //Se o jogador ainda tiver vidas, muda de Nivel
+        // Caso contrario, cobra morre
+    } 
+    else
+    {
+
+    }
+
+}
+
+/// Atualiza elementos do jogo
+void Game::update()
+{
+    //auto dir = player.next_move();
+
+    //Se a nova posição for a mação, cresce
+    //Caso contrário, movimenta cobra
+
+    auto pos = snake.get_position() + Direction(-1, 0);
+    snake.grow( pos);
+
+}
+
+void Game::render()
+{
+    std::this_thread::sleep_for (std::chrono::milliseconds(150)); //!< Delay
+
+    auto map = level.get_level();
+    auto snake_body = snake.get_body();
+    auto size_snake(0ul);
+    for( auto roll(0ul); roll < level.get_rolls() ; ++roll){
+        for(auto col(0ul); col < level.get_cols(); ++col){
+            if( size_snake < snake.size() ){
+                auto pos = std::find(snake_body.begin(), snake_body.end(), Position(roll, col));
+                if( pos != snake_body.end()){
+                    std::cout << "\u25C8";
+                    size_snake++;
+                } else{
+                    if( level.is_solution( Position(roll, col) ))
+                        std::cout << "*";
+                    else if( map[roll][col] == '#')
+                        std::cout << "\u22A0";
+                    else 
+                        std::cout << " ";
+                }
+            } 
+            else{
+                if( level.is_solution( Position(roll, col) ))
+                    std::cout << "*";
+                else if( map[roll][col] == '#')
+                    std::cout << "\u22A0";
+                else 
+                    std::cout << " ";
+            }
+      }
+      std::cout << std::endl;
+  }
+}
+
+bool Game::game_over(){
+    return ( (snake.get_state() == Snake::SnakeState::DEAD )
+                or (snake.get_state() == Snake::SnakeState::WIN ) );
 }
