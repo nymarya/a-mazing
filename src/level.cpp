@@ -6,6 +6,8 @@ Level::Level()
 {
     ls::list<data> lvl;
     levels = lvl;
+    m_current_lvl = 1;
+    m_total_lvl = 1;
 }
 //<! carrega os levels enviados
 void Level::load( std::string filename )
@@ -70,7 +72,7 @@ void Level::load( std::string filename )
             }
         }
     }
-
+    m_total_lvl = levels.size();
     file.close();
 }
 
@@ -176,4 +178,15 @@ type_level Level::get_level ()
 void Level::next_level ()
 {
     levels.pop_front();
+    m_current_lvl++;
+}
+
+int Level::get_total_lvls ()
+{
+    return m_total_lvl;
+}
+
+int Level::get_current_lvl ()
+{
+    return m_current_lvl;
 }

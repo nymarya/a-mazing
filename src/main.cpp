@@ -9,6 +9,7 @@ int main(int arcg, char** argv){
 
 	//Carregar e imprimir fase
 	lvl.load(argv[1]);
+	std::cout << "Total de níveis: " << lvl.get_total_lvls() << std::endl;
 	lvl.print_lvl();
 
 	Position p;
@@ -34,12 +35,19 @@ int main(int arcg, char** argv){
 
 	lvl.print_lvl();
 	std::cout << "apples restantes: " << lvl.get_apples() << std::endl;
+	std::cout << "level atual: " << lvl.get_current_lvl() << std::endl;
 
 	lvl.next_level();
+	std::cout << "level atual: " << lvl.get_current_lvl() << std::endl;
+
 	lvl.print_lvl();
 	lvl.next_level();
+	std::cout << "level atual: " << lvl.get_current_lvl() << std::endl;
+
 	lvl.print_lvl();
 	lvl.next_level();
+	std::cout << "level atual: " << lvl.get_current_lvl() << std::endl;
+
 	lvl.print_lvl();
 
 

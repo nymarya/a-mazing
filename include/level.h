@@ -54,6 +54,8 @@ private:
 	};
 
 	ls::list<data> levels;
+	int m_current_lvl;
+	int m_total_lvl;
 	
 
 public:
@@ -155,7 +157,24 @@ public:
 	 */
 	type_level get_level ();
 
+	/**
+	 * @brief      Avança para o próximo level
+	 */
 	void next_level ();
+
+	/**
+	 * @brief      Pega a quantidade total de levels
+	 *
+	 * @return     O total de levels
+	 */
+	int get_total_lvls ();
+
+	/**
+	 * @brief      Pega o nível atual
+	 *
+	 * @return     O nível atual.
+	 */
+	int get_current_lvl ();
 
 };
 
