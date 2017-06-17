@@ -25,7 +25,7 @@ class Game{
     public:
 
      static const int MIN_SIZE = 1;      //<! Menor valor para linha ou coluna
-     static const int MAX_SIZE = 15;     //<! Maior valor para linha ou soluna
+     static const int MAX_SIZE = 100;     //<! Maior valor para linha ou soluna
 
         struct Result{
             bool success;

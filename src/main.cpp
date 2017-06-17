@@ -7,7 +7,6 @@ int main(int argc, char** argv){
 	//!< Retorna erro se não foi passado arquivo
 	if (argc < 2 ){
 		std::cout << "Arquivo não encontrado! Por favor, tente novamente.\n";
-
 		return EXIT_FAILURE;
 	}
 

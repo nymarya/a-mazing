@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cstdlib>
 #include "comum.h"
+#include "List/list.h"
+
 
 using type_level = std::vector<std::string>;
 
@@ -17,6 +19,7 @@ class Level
  * # -> parede
  * . -> parede invisível
  * m -> maça
+ * * -> ponto inicial
  * c -> cobra
  * x -> local vizitado
  * d -> ponto de decisão
@@ -24,16 +27,44 @@ class Level
  */
 
 private:
-	size_t m_rolls;
-	size_t m_cols;
-	size_t m_start_roll;
-	size_t m_start_col;
-	int m_apples;
-	type_level levels;
+
+	struct data
+	{
+		size_t m_rolls;
+		size_t m_cols;
+		size_t m_start_roll;
+		size_t m_start_col;
+		int m_apples;
+		type_level lvl;
+
+		/**
+		 * @brief      Construtor básico
+		 */
+		data ( )
+			: m_rolls(0)
+			, m_cols(0)
+			, m_start_roll(0)
+			, m_start_col(0)
+			, m_apples(5)
+		{/*empty*/}
+	};
+
+	ls::list<data> levels;
+	int m_current_lvl;
+	int m_total_lvl;
+	
 
 public:
 	
+	/**
+	 * @brief      Construtor
+	 */
 	Level();
+
+	/**
+	 * @brief      Destroi o objeto
+	 */
+	~Level() = default;
 
 	/**
 	 * @brief      Carrega o labirinto atravez de um arquivo passafo
@@ -121,6 +152,26 @@ public:
 	 * @return     o level atual.
 	 */
 	type_level get_level ();
+
+	/**
+	 * @brief      Avança para o próximo level
+	 */
+	void next_level ();
+
+	/**
+	 * @brief      Pega a quantidade total de levels
+	 *
+	 * @return     O total de levels
+	 */
+	int get_total_lvls ();
+
+	/**
+	 * @brief      Pega o nível atual
+	 *
+	 * @return     O nível atual.
+	 */
+	int get_current_lvl ();
+
 };
 
 
