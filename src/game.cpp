@@ -117,6 +117,8 @@ void Game::update()
     auto pos = snake.get_position() + Direction(-1, 0);
     snake.grow( pos);
 
+    level.next_level();
+
 }
 
 void Game::render()
@@ -130,7 +132,13 @@ void Game::render()
         for(auto col(0ul); col < level.get_cols(); ++col){
             if( size_snake < snake.size() ){
                 auto pos = std::find(snake_body.begin(), snake_body.end(), Position(roll, col));
-                if( pos != snake_body.end()){
+                if( pos == snake_body.begin() )
+                {
+                    std::cout << snake.get_head();
+                    size_snake++;
+                }
+                else if ( pos != snake_body.end())
+                {
                     std::cout << "\u25C8";
                     size_snake++;
                 } else{
@@ -158,4 +166,13 @@ void Game::render()
 bool Game::game_over(){
     return ( (snake.get_state() == Snake::SnakeState::DEAD )
                 or (snake.get_state() == Snake::SnakeState::WIN ) );
+}
+
+void Game::teste(std::string filename){
+    level.next_level();
+
+    Level level2;
+    level2.load( level.get_level() );
+    std::cout << level2.get_level().size();
+    level2.print_lvl();
 }

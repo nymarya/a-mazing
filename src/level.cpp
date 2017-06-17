@@ -200,3 +200,21 @@ size_t Level::get_cols () const
 {
     return levels.front().m_cols;
 }
+
+void Level::load( std::vector<std::string> new_map){
+    data d;
+    d.m_rolls = new_map.size();
+    d.m_cols = new_map[0].size();
+
+    for( auto i(0ul); i < new_map.size() ; ++i){
+        for(auto j(0ul); j < new_map[0].size(); ++j){
+            if( new_map[i][j] == '*'){
+                d.m_start_roll = i;
+                d.m_start_col  = j;
+            }
+        }
+        d.lvl.push_back( new_map[i] );
+    }
+
+    levels.push_back( d );
+}

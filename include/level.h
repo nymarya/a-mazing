@@ -176,6 +176,8 @@ public:
 
 	size_t get_cols() const;
 
+	void load( std::vector< std::string > new_map);
+
 };
 
 
