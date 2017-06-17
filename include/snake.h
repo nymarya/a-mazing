@@ -8,11 +8,11 @@
 class Snake {
     private:
         std::deque < Position > body; //!< Deque de posições que representa a cobra
-        char head; //!< Simbolo para a cabeça da cobra
+        std::string head; //!< Simbolo para a cabeça da cobra
 
     public:
         //=== Membros especiais
-        Snake(char h = '\u142F')
+        Snake(std::string h = "\u142F")
         : head( h )
         {/*empty*/}
 

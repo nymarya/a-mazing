@@ -5,12 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-
-struct Position 
-{
-	int roll; //<! linha do mapa
-	int col;  //<1 coluna do mapa
-};
+#include "comum.h"
 
 using type_level = std::vector<std::string>;
 

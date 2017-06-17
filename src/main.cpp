@@ -1,7 +1,5 @@
 #include <iostream>
 #include <cassert>
-#include "level.h"
-#include "maze.h"
 #include "game.h"
 
 int main(int argc, char** argv){
