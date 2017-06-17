@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include "comum.h"
 #include "snake.h"
 #include "player.h"
 #include "level.h"
