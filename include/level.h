@@ -21,9 +21,9 @@ class Level
  * m -> maça
  * * -> ponto inicial
  * c -> cobra
- * x -> local vizitado
+ * x -> local visitado
  * d -> ponto de decisão
- * / -> vizitado e não faz parte da solução
+ * / -> visitado e não faz parte da solução
  */
 
 private:
@@ -72,6 +72,8 @@ public:
 	 * @param[in]  filename  O arquivo contendo os lvls
 	 */
 	void load ( std::string filename );
+
+	void load ( std::vector< std::string > new_map);
 
 	/**
 	 * @brief      Imprime um level
@@ -175,6 +177,16 @@ public:
 	size_t get_rolls() const;
 
 	size_t get_cols() const;
+
+	/**
+	 * @brief      Verifica se uma posição é um ponto de 
+	 *             decisão
+	 *
+	 * @param[in]  pos   A posição
+	 *
+	 * @return     True se decisão, False caso contrário.
+	 */
+	bool is_decision ( const Position & pos );
 
 };
 

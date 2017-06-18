@@ -1,4 +1,11 @@
 #include "game.h"
+ls::vector<Direction> direction = 
+{
+	Direction(-1, 0), //north
+	Direction(1, 0),  //south
+	Direction(0, -1), //east
+	Direction(0, 1)   //west
+};
 
 Game::Result Game::validate( std::string filename){
     Result result;
@@ -65,12 +72,21 @@ void Game::initialize (std::string filename){
     level.load( filename );
 
     //!< Gera maçã
+    level.next_level();
+    level.next_level();
     level.generate_apple();
+    
 
     //!< Gera snake
     snake.update_state( Snake::SnakeState::RUN );
     snake.grow( level.get_start_position() );
 
+    auto map = level.get_level();
+    bool yes = player.find_solution( map );
+    if (yes){
+        player.print();
+    }
+    else std::cout << "Tem solução não!\n";
 }
 
 /// Processa eventos do jogo
@@ -78,7 +94,7 @@ void Game::process_events( void ){
 
     //player.find
 
-    //Se comeu todas as maças, passa de Nivel
+    //Se comeu todas as maças, passa de Nivel, acha nova soluçao
     if( level.get_apples() == 0 and 
         level.get_current_lvl() != level.get_total_lvls() )
     {
@@ -109,13 +125,20 @@ void Game::process_events( void ){
 /// Atualiza elementos do jogo
 void Game::update()
 {
-    //auto dir = player.next_move();
+    auto dir = player.next_move();
 
     //Se a nova posição for a mação, cresce
+    // se for parede, CRASH
     //Caso contrário, movimenta cobra
-
-    auto pos = snake.get_position() + Direction(-1, 0);
-    snake.grow( pos);
+    auto pos = snake.get_position() + direction[(int)dir];
+    while( not level.is_solution( pos ) ){
+        snake.move( pos);
+        dir = player.next_move();
+        pos = snake.get_position() + direction[(int)dir];
+        render();
+    }
+    snake.move( pos);
+    render();
 
 
 }

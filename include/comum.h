@@ -2,6 +2,8 @@
 #define _COMUM_H_
 
 #include <iostream>
+#include "Vector/vector.h"
+
 
 enum class direction_t : int
 {
@@ -9,6 +11,8 @@ enum class direction_t : int
     SOUTH,      // ( 0,  1) => (1, 0)
     EAST,       // (-1,  0) => (0, -1)
     WEST,       // ( 1,  0) => (0, 1)
+    STATIC,     //(0, 0)
+    NONE,
 };
 
 // * -> posição inicial
@@ -20,10 +24,10 @@ enum class direction_t : int
 // " " -> não foi visitado
 
 struct Direction{
-    std::size_t height; //<! 
-    std::size_t weight; //<! 
+    int height; //<! 
+    int weight; //<! 
 
-    Direction( std::size_t h=0, std::size_t w=0)
+    Direction( int h=0, int w=0)
     :height(h), weight(w)
     {/*empty*/}
 };
@@ -46,6 +50,10 @@ struct Position{
     bool operator==( Position rhs)
     {
         return (roll == rhs.roll and col == rhs.col);
+    }
+    bool operator!=( const Position & rhs )
+    {
+        return (roll != rhs.roll) or (col != rhs.col);
     }
 
 };

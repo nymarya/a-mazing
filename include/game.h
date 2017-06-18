@@ -14,14 +14,14 @@
 #include "level.h"
 
 //=== Classe que controla o jogo
+
 class Game{
 
-    //=== Membros privados
+        //=== Membros privados
     private:
-        Snake snake;  //!< Instancia da classe Snake
-        //Player player;//!< Instancia da classe Player 
         Level level; //!< Instancia da classe Level
-
+        Snake snake;  //!< Instancia da classe Snake
+        Player player;//!< Instancia da classe Player 
         unsigned int m_levels; //!< Número de levels
     
     public:

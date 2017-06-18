@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "game.h"
+#include "player.h"
 
 int main(int argc, char** argv){
 
@@ -23,11 +24,8 @@ int main(int argc, char** argv){
 
 	game.initialize( argv[1]);
 
-	 game.render();
-	 game.update();
-	 game.render();
-	 game.update();
-	 game.render();
+	   game.render();
+	   game.update();
 
 
 	return EXIT_SUCCESS;

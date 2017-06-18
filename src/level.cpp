@@ -76,6 +76,24 @@ void Level::load( std::string filename )
     file.close();
 }
 
+void Level::load( std::vector<std::string> new_map){
+    data d;
+    d.m_rolls = new_map.size();
+    d.m_cols = new_map[0].size();
+
+    for( auto i(0ul); i < new_map.size() ; ++i){
+        for(auto j(0ul); j < new_map[0].size(); ++j){
+            if( new_map[i][j] == '*'){
+                d.m_start_roll = i;
+                d.m_start_col  = j;
+            }
+        }
+        d.lvl.push_back( new_map[i] );
+    }
+
+    levels.push_back( d );
+}
+
 void Level::print_lvl ()
 {
     auto current_lvl = levels.front();
@@ -95,7 +113,9 @@ bool Level::is_blocked ( const Position & pos )
 
     auto current_lvl = levels.front();
 
-	if ( current_lvl.lvl[roll][col] != ' ' ) return true;
+	if ( (current_lvl.lvl[roll][col] != ' ') and 
+         (current_lvl.lvl[roll][col] != 'm') )
+            return true;
 	else return false;
 }
 
@@ -199,4 +219,15 @@ size_t Level::get_rolls () const
 size_t Level::get_cols () const
 {
     return levels.front().m_cols;
+}
+
+bool Level::is_decision ( const Position & pos )
+{
+    auto roll = pos.roll;
+    auto col  = pos.col;
+
+    auto current_lvl = levels.front();
+
+    if ( current_lvl.lvl[roll][col] == 'd' ) return true;
+    else return false;
 }
