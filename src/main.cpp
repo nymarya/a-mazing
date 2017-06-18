@@ -23,13 +23,11 @@ int main(int argc, char** argv){
 
 	game.initialize( argv[1]);
 
-	// game.render();
-	// game.update();
-	// game.render();
-	// game.update();
-	// game.render();
-
-	game.teste(argv[1]);
+	 game.render();
+	 game.update();
+	 game.render();
+	 game.update();
+	 game.render();
 
 
 	return EXIT_SUCCESS;

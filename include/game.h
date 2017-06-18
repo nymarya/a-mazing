@@ -63,7 +63,6 @@ class Game{
 
         bool game_over();
 
-        void teste( std::string file);
 };
 
 

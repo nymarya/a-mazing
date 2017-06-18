@@ -117,7 +117,6 @@ void Game::update()
     auto pos = snake.get_position() + Direction(-1, 0);
     snake.grow( pos);
 
-    level.next_level();
 
 }
 
@@ -166,13 +165,4 @@ void Game::render()
 bool Game::game_over(){
     return ( (snake.get_state() == Snake::SnakeState::DEAD )
                 or (snake.get_state() == Snake::SnakeState::WIN ) );
-}
-
-void Game::teste(std::string filename){
-    level.next_level();
-
-    Level level2;
-    level2.load( level.get_level() );
-    std::cout << level2.get_level().size();
-    level2.print_lvl();
 }
