@@ -99,6 +99,16 @@ bool Player::find_solution ( std::vector<std::string> & map )
 		else if ( not pos_visit.insert( x.pos, x) )
 		{
 			/*próximo ciclo*/
+			if( x.pos == decisions.top() ){
+				decisions.pop();
+			} else{
+				auto point = Solution_.back();
+				while ( point.pos != (decisions.top())) 
+				{
+					Solution_.pop_back();
+					point = Solution_.back();
+				}
+			}
 			
 		} else
 		{
