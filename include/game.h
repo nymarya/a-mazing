@@ -4,10 +4,11 @@
 #include <iostream> //cout
 #include <fstream>
 #include <sstream>
-#include <string>
+#include <string>    //std::string::find
 #include <algorithm>
 #include <thread>    // std::this_thread::sleep_for
 #include <chrono>    // std::chrono::seconds
+#include <iomanip> //<! std::setw, std::setfill
 #include "comum.h"
 #include "snake.h"
 #include "player.h"
