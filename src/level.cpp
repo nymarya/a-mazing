@@ -36,6 +36,7 @@ void Level::load( std::string filename )
             data d;
             d.m_rolls = rolls_;
             d.m_cols = cols_;
+            d.m_apples = 5;
 
             std::string s; //<! auxiliar
             char ch;
@@ -76,6 +77,24 @@ void Level::load( std::string filename )
     file.close();
 }
 
+void Level::load( std::vector<std::string> new_map){
+    data d;
+    d.m_rolls = new_map.size();
+    d.m_cols = new_map[0].size();
+
+    for( auto i(0ul); i < new_map.size() ; ++i){
+        for(auto j(0ul); j < new_map[0].size(); ++j){
+            if( new_map[i][j] == '*'){
+                d.m_start_roll = i;
+                d.m_start_col  = j;
+            }
+        }
+        d.lvl.push_back( new_map[i] );
+    }
+
+    levels.push_back( d );
+}
+
 void Level::print_lvl ()
 {
     auto current_lvl = levels.front();
@@ -95,7 +114,9 @@ bool Level::is_blocked ( const Position & pos )
 
     auto current_lvl = levels.front();
 
-	if ( current_lvl.lvl[roll][col] != ' ' ) return true;
+	if ( (current_lvl.lvl[roll][col] != ' ') and 
+         (current_lvl.lvl[roll][col] != 'm') )
+            return true;
 	else return false;
 }
 
@@ -120,6 +141,8 @@ void Level::generate_apple ()
 {
     auto current_lvl = levels.begin();
 
+    (*current_lvl).lvl[m_apple_pos.roll][m_apple_pos.col] = ' ';
+
 	srand (time(NULL));
 	bool aux = true;
 	Position apple;
@@ -133,6 +156,7 @@ void Level::generate_apple ()
 	}
 
 	(*current_lvl).lvl[apple.roll][apple.col] = 'm';
+    m_apple_pos = apple;
 }
 
 void Level::update_apples ()
@@ -189,4 +213,25 @@ int Level::get_total_lvls ()
 int Level::get_current_lvl ()
 {
     return m_current_lvl;
+}
+
+size_t Level::get_rolls () const
+{
+    return levels.front().m_rolls;
+}
+
+size_t Level::get_cols () const
+{
+    return levels.front().m_cols;
+}
+
+bool Level::is_decision ( const Position & pos )
+{
+    auto roll = pos.roll;
+    auto col  = pos.col;
+
+    auto current_lvl = levels.front();
+
+    if ( current_lvl.lvl[roll][col] == 'd' ) return true;
+    else return false;
 }
