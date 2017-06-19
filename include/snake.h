@@ -21,6 +21,8 @@ class Snake {
 
         SnakeState state;
 
+        int m_lifes;
+
     public:
         //=== Membros especiais
         Snake(std::string h = "\u142F")
@@ -85,5 +87,9 @@ class Snake {
          * @return     Tamanho atual da cobra
          */
         std::size_t size() const;
+
+        int get_lifes() const;
+
+        void die();
 };
 #endif

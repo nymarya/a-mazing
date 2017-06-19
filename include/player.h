@@ -16,33 +16,35 @@ struct Move
 class Player
 {
 
-private:
-	
-	ls::vector<direction_t> m_solution;
+	private:
+		
+		ls::vector<direction_t> m_solution;
+		int m_lifes;
+		
 
-public:
+	public:
 
-	/**
-	 * @brief      Construtor default;
-	 */
-	Player();
+		/**
+		* @brief      Construtor default;
+		*/
+		Player();
 
-	/**
-	 * @brief      Retorna uma direção para a snake que faz parte da 
-	 *             solução encontrada.
-	 *
-	 * @return     Uma direção da solução
-	 */
-	direction_t next_move();
+		/**
+		* @brief      Retorna uma direção para a snake que faz parte da 
+		*             solução encontrada.
+		*
+		* @return     Uma direção da solução
+		*/
+		direction_t next_move();
 
-	/**
-	 * @brief      Procura por um solução para o labirinto
-	 *
-	 * @return     True se existe posição, false caso contrário
-	 */
-	bool find_solution ( std::vector<std::string> & map );
+		/**
+		* @brief      Procura por um solução para o labirinto
+		*
+		* @return     True se existe posição, false caso contrário
+		*/
+		bool find_solution ( std::vector<std::string> & map, Position initial_pos );
 
-	void print();
+		void print();
 
 
 };

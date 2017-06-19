@@ -50,18 +50,18 @@ Player::Player()
 {
     ls::vector<direction_t> sol;
     m_solution = sol;
+	m_lifes = 3;
   
 }
 
-bool Player::find_solution ( std::vector<std::string> & map )
+bool Player::find_solution ( std::vector<std::string> & map, Position initial_pos )
 {
 	Level lvl;
 	lvl.load( map );
-	auto start = lvl.get_start_position(); //<! posição inicial da cobra
 
 	//<! Declarar movimento inicial
 	Move inicial;
-	inicial.pos = start;
+	inicial.pos = initial_pos;
 	inicial.dir = direction_t::STATIC;
 
 	//<! pilha para a possível sólução

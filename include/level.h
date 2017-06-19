@@ -52,6 +52,7 @@ private:
 	ls::list<data> levels;
 	int m_current_lvl;
 	int m_total_lvl;
+	Position m_apple_pos;
 	
 
 public:

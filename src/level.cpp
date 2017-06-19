@@ -36,6 +36,7 @@ void Level::load( std::string filename )
             data d;
             d.m_rolls = rolls_;
             d.m_cols = cols_;
+            d.m_apples = 5;
 
             std::string s; //<! auxiliar
             char ch;
@@ -140,6 +141,8 @@ void Level::generate_apple ()
 {
     auto current_lvl = levels.begin();
 
+    (*current_lvl).lvl[m_apple_pos.roll][m_apple_pos.col] = ' ';
+
 	srand (time(NULL));
 	bool aux = true;
 	Position apple;
@@ -153,6 +156,7 @@ void Level::generate_apple ()
 	}
 
 	(*current_lvl).lvl[apple.roll][apple.col] = 'm';
+    m_apple_pos = apple;
 }
 
 void Level::update_apples ()

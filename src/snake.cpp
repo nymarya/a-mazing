@@ -47,3 +47,11 @@ std::deque < Position > Snake::get_body( ) const{
 std::size_t Snake::size() const{
     return body.size();
 }
+
+int Snake::get_lifes() const{
+	return m_lifes;
+}
+
+void Snake::die(){
+	m_lifes--;
+}
