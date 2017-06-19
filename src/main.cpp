@@ -13,41 +13,24 @@ int main(int argc, char** argv){
 
 	Game game;
 
-	// //!< Validar argumentos
-	// Game::Result result = game.validate(argv[1]);
-	// if( not result.success){
-	// 	//!< Imprime mensagem de erro e encerra programa
-	// 	std::cout << result.message <<std::endl;
+	 //!< Validar argumentos
+	 Game::Result result = game.validate(argv[1]);
+	 if( not result.success){
+	 	//!< Imprime mensagem de erro e encerra programa
+	 	std::cout << result.message <<std::endl;
 
-	// 	return EXIT_FAILURE;
-	// }
+	 	return EXIT_FAILURE;
+	 }
 
-	//game.initialize( argv[1]);
-	//game.render();
+	game.initialize( argv[1]);
+	game.render();
 
-	// while( not game.game_over() ){
-	// 	game.process_events();
-	// 	game.update();
-	// 	game.render();
-	// }
+	 while( not game.game_over() ){
+	 	game.process_events();
+		game.update();
+	 	game.render();
+	 }
 
-	Move mv;
-	std::stack<Move> teste;
-	mv.pos = Position(0,0);
-	mv.dir = direction_t::EAST;
-	teste.push(mv);
-
-	if(teste.top().dir == direction_t::EAST){
-		std::cout <<"ok" << (int) teste.top().dir;
-	}
-
-
-	mv.dir = direction_t::SOUTH;
-	teste.push(mv);
-
-	if(teste.top().dir == direction_t::SOUTH){
-		std::cout <<"ok" << (int) teste.top().dir;
-	}
 
 
 	return EXIT_SUCCESS;

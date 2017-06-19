@@ -10,7 +10,16 @@
 struct Move
 {
 	Position pos;
-	direction_t dir;
+	std::vector<direction_t> dir;
+
+	Move & operator=( const Move & rhs )
+	{
+		pos.roll = rhs.pos.roll;
+		pos.col = rhs.pos.col;
+
+		dir = rhs.dir;
+		return *this;
+	}
 };
 
 class Player
@@ -18,7 +27,7 @@ class Player
 
 	private:
 		
-		ls::vector<direction_t> m_solution;
+		std::vector<direction_t> m_solution;
 		int m_lifes;
 		
 
@@ -45,7 +54,6 @@ class Player
 		bool find_solution ( std::vector<std::string> & map, Position initial_pos );
 
 		void print();
-
 
 };
 

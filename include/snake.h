@@ -49,7 +49,7 @@ class Snake {
          *
          * @param[in]  dir Simbolo que representa a direção da cabeça
          */
-        void set_head( std::string dir);
+        void set_head( direction_t dir);
 
         /**
          * @brief      Recupera símbolo da cabeça da cobra

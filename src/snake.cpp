@@ -20,6 +20,32 @@ std::string Snake::get_head() const{
     return head;
 }
 
+void Snake::set_head( direction_t dir){
+    //cima \u02c4
+    //baixo \u02c5
+    //direita \u02c3
+    //esq \u02c2
+
+    //!< Atualiza cabeça da cobra
+    switch( dir ){
+        case direction_t::NORTH:
+            head = "\u1404";
+            break;
+        case direction_t::SOUTH:
+            head = "\u1401";
+            break;
+        case direction_t::WEST :
+            head = "\u1413";
+            break;
+        case direction_t::EAST:
+            head = "\u1417";
+            break;
+        default:
+            head = "\u0A66";
+            break;
+    }
+}
+
 /// Atualiza a cobra após a maçã ser comida
 void Snake::grow( Position pos){
     //!< Quando a cobra comer a maçã, a maçã vira a cabeça da cobra

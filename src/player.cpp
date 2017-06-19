@@ -2,7 +2,7 @@
 #include <functional> //<! std::hash
 
 
-ls::vector<Direction> directions = 
+std::vector<Direction> directions = 
 {
 	Direction(-1, 0), //north
 	Direction(1, 0),  //south
@@ -10,7 +10,7 @@ ls::vector<Direction> directions =
 	Direction(0, 1)   //west
 };
 
-ls::vector<direction_t> movements =
+std::vector<direction_t> movements =
 {
 	direction_t::NORTH,
 	direction_t::SOUTH,
@@ -39,7 +39,7 @@ direction_t Player::next_move()
 {
 	if( not m_solution.empty() ){
 		auto dir = m_solution.front();
-		m_solution.pop_front();
+		m_solution.erase(m_solution.begin());
 		return dir;
 	}
 	return direction_t::NONE;
@@ -48,7 +48,7 @@ direction_t Player::next_move()
 
 Player::Player()
 {
-    ls::vector<direction_t> sol;
+    std::vector<direction_t> sol;
     m_solution = sol;
 	m_lifes = 3;
   
@@ -62,106 +62,67 @@ bool Player::find_solution ( std::vector<std::string> & map, Position initial_po
 	//<! Declarar movimento inicial
 	Move inicial;
 	inicial.pos = initial_pos;
-	inicial.dir = direction_t::STATIC;
+	inicial.dir.push_back(direction_t::STATIC);
 
 	//<! pilha para a possível sólução
 	std::stack< Move > possible_sol;
 
-	//<! vector de soluções
-	ls::vector< Move > Solution_;
-
 	//<! tabela hash para posições visitadas
 	HashTbl<Position, Move, KeyHash, KeyEqual> pos_visit(23);
-
-	//!< Pilha de decisões tomadas
-	std::stack < Position> decisions;
 
 	Move x;
 	//<! pilha inicia com a posição inicial
 	possible_sol.push( inicial );
+
+	//<! possível solução na tabela hash
+	pos_visit.insert( inicial.pos, inicial);	
+
 	while (  not possible_sol.empty() )
-	{
+	{	
 		// desempilha uma possível solução
 		x = possible_sol.top();
 		possible_sol.pop();
 
 		///<! verifica se é a solução
 		if ( lvl.is_solution( x.pos ) )
-		{
-			Solution_.push_back( x );
-			std::cout << "Solução: l-" << x.pos.roll;
-			std::cout << " c-" << x.pos.col << std::endl;
-			for ( auto i = Solution_.begin(); i != Solution_.end(); ++i )
-				m_solution.push_back( (*i).dir );
+		{	
+			m_solution = x.dir;		
+
 			return true;
 		}
-		// verifica se já foi visitada
-		else if ( not pos_visit.insert( x.pos, x) )
+		//<! verifica se já foi visitada e já insere uma possível solução
+		else if ( (not pos_visit.insert( x.pos, x)) and (x.pos != inicial.pos))
 		{
 			/*próximo ciclo*/
-			if( x.pos == decisions.top() ){
-				decisions.pop();
-			} else{
-				auto point = Solution_.back();
-				while ( point.pos != (decisions.top())) 
-				{
-					Solution_.pop_back();
-					point = Solution_.back();
-				}
-			}
 			
 		} else
 		{
-			Solution_.push_back( x );
-
-			auto cont(0);
-			auto i = directions.begin();
-
-
-			for ( auto dir  = (int) direction_t::NORTH; dir != (int) direction_t::WEST +1; ++dir )
+			
+			for ( auto d  = (int) direction_t::NORTH; d != (int) direction_t::WEST +1; ++d )
 			{
-				direction_t index = static_cast<direction_t>(dir);
-				Direction d = directions[(int) index];
+				//direction_t index = static_cast<direction_t>(dir);
+				Direction de = directions[ d ];
 
 				Position direc;
-				direc.roll = d.height + x.pos.roll;
-				direc.col  = d.weight  + x.pos.col;
+				direc.roll = de.height + x.pos.roll;
+				direc.col  = de.weight  + x.pos.col;
 
 				Move mv;
 				//<! verificar se não é bloqueado
 				if ( !lvl.is_blocked( direc ) and not pos_visit.retrieve( direc, mv) )
 				{
-					
+
 					Move ins;
 					ins.pos = direc; //de onde veio
-					ins.dir = movements[(int) index]; //direção que tomou
+					ins.dir = x.dir;
+					ins.dir.push_back(movements[ d ]); //direção que tomou
 					possible_sol.push( ins ); //adiciona move
-					cont++; //conta quantas soluções
+					
 				}   	
 			}
-
-			//<! verifica se é beco sem saída
-			if ( cont == 0 )
-			{
-				//<! volta até a ultima decisão tomada
-				auto point = Solution_.back();
-				while ( point.pos != (decisions.top())) 
-				{
-					Solution_.pop_back();
-					point = Solution_.back();
-				}
-			} 
-			else if( cont > 1)
-			{
-				//!< Marca na pilha de decisoes
-				decisions.push( x.pos);
-			}
-			cont = 0;
 		}
 	}
-	if ( Solution_.empty() ) return false;
-	
-	return true;
+	return false;
 }
 
 void Player::print ()

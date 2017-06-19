@@ -91,13 +91,10 @@ void Game::initialize (std::string filename){
      if (yes){
          player.print();
      }
-     else std::cout << "Tem solução não!\n";
 }
 
 /// Processa eventos do jogo
 void Game::process_events( void ){
-
-    std::cout << level.get_apples();
 
     //Se comeu todas as maças, passa de Nivel, acha nova soluçao
     if( level.get_apples() == 0 and 
@@ -107,6 +104,7 @@ void Game::process_events( void ){
         level.generate_apple(); //!< Gera nova maçã
         auto map = level.get_level();
         player.find_solution( map, level.get_start_position() ); //!< Busca a solução do novo nível
+        player.print();
     } 
     //Se não tem mais maçãs nem níveis, fim de jogo
     else if ( level.get_apples() == 0 and 
@@ -137,19 +135,21 @@ void Game::process_events( void ){
 void Game::update()
 {
     auto dir = player.next_move();
+    snake.set_head( dir );
+
     auto new_pos = snake.get_position() + direction[(int)dir];
 
     //Se a nova posição for a mação, cresce
     if( level.is_solution( new_pos ) ){
-        std::cout <<"eita";
         snake.grow( new_pos );
         level.update_apples();
-        if( level.get_apples() > 0 ){
-            level.generate_apple();
-            auto map = level.get_level();
-            player.find_solution( map, snake.get_body().front() );
-            player.next_move();
+
+        if( level.get_apples() == 0 and level.get_current_lvl() != level.get_total_lvls() ){
+            level.next_level();
         }
+        level.generate_apple();
+        auto map = level.get_level();
+        player.find_solution( map, snake.get_body().front() );
         
     } else if( level.is_blocked( new_pos  ) ){
         // se for parede, CRASH
@@ -163,7 +163,7 @@ void Game::update()
 
 void Game::render()
 {
-    std::this_thread::sleep_for (std::chrono::milliseconds(250)); //!< Delay
+    std::this_thread::sleep_for (std::chrono::milliseconds(150)); //!< Delay
 
     auto map = level.get_level();
     auto snake_body = snake.get_body();
@@ -179,22 +179,22 @@ void Game::render()
                 }
                 else if ( pos != snake_body.end())
                 {
-                    std::cout << "\u25C8";
+                    std::cout << "\u0A66";
                     size_snake++;
                 } else{
                     if( level.is_solution( Position(roll, col) ))
-                        std::cout << "*";
+                        std::cout << "\u2615";
                     else if( map[roll][col] == '#')
-                        std::cout << "\u22A0";
+                        std::cout << "\u25FE";
                     else 
                         std::cout << " ";
                 }
             } 
             else{
                 if( level.is_solution( Position(roll, col) ))
-                    std::cout << "*";
+                    std::cout << "\u2615";
                 else if( map[roll][col] == '#')
-                    std::cout << "\u22A0";
+                    std::cout << "\u25FE";
                 else 
                     std::cout << " ";
             }

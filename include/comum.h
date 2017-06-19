@@ -11,7 +11,7 @@ enum class direction_t : int
     SOUTH,      // ( 0,  1) => (1, 0)
     EAST,       // (-1,  0) => (0, -1)
     WEST,       // ( 1,  0) => (0, 1)
-    STATIC,     //(0, 0)
+    STATIC,     // (0, 0)
     NONE,
 };
 
