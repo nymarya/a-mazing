@@ -2,7 +2,9 @@
 
 void Snake::bind_level( Level & l_ )
 {
-    *lvl = l_;
+
+    std::cout << "Entrou no bind_level" << l_.get_level().size() << std::endl;
+    lvl = &l_;
 }
 
 Position Snake::get_position( void) 

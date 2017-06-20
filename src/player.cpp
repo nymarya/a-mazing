@@ -37,12 +37,12 @@ struct KeyEqual{
 
 void Player::bind_level( Level & l_ )
 {
-	*lvl = l_;
+	lvl = &l_;
 }
 
 void Player::bind_snake( Snake & s_ )
 {
-	*snk = s_;
+	snk = &s_;
 }
 
 direction_t Player::next_move()

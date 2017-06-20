@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <list>
 #include <iostream>
 #include <cstdlib>
@@ -48,18 +49,19 @@ private:
 			, m_start_col(0)
 			, m_apples(5)
 		{
-			type_level level;
-			lvl = level; 
+			/*empty*/ 
 		}
 
 		data & operator=( const data & rhs )
 		{
+			std::cout << rhs.lvl.size() << std::endl;
+
 			m_rolls = rhs.m_rolls;
 			m_cols = rhs.m_cols;
 			m_start_roll = rhs.m_start_roll;
 			m_start_col = rhs.m_start_col;
 			m_apples = rhs.m_apples;
-			//lvl = rhs.lvl;
+			lvl = rhs.lvl;
 
 			return *this;
 		}
@@ -207,7 +209,10 @@ public:
 
 	Level & operator=( const Level & rhs )
 	{
-		levels = rhs.levels;
+		levels.resize( rhs.levels.size() );
+		std::cout << rhs.levels.size() << std::endl;
+		std::copy(rhs.levels.begin(), rhs.levels.end(), levels.begin() );
+		//levels = rhs.levels;
 		m_current_lvl = rhs.m_current_lvl;
 		m_total_lvl = rhs.m_total_lvl;
 		m_apple_pos = rhs.m_apple_pos;
