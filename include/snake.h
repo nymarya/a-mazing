@@ -3,6 +3,7 @@
 
 #include <deque>
 #include "comum.h"
+#include "level.h"
 
 //=== Classe que controla o jogo
 class Snake {
@@ -20,6 +21,7 @@ class Snake {
         std::string head; //!< Simbolo para a cabeça da cobra
 
         SnakeState state;
+        Level *lvl;
 
         int m_lifes;
 

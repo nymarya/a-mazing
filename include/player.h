@@ -3,6 +3,7 @@
 
 #include <stack>
 #include "level.h"
+#include "snake.h"
 #include "Vector/vector.h"
 #include "Hash/hash_tbl.h"
 #include "comum.h"
@@ -29,6 +30,9 @@ class Player
 		
 		std::vector<direction_t> m_solution;
 		int m_lifes;
+
+		Snake * snk;
+		Level *lvl;
 		
 
 	public:
