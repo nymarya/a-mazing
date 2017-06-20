@@ -56,6 +56,14 @@ struct Position{
         return (roll != rhs.roll) or (col != rhs.col);
     }
 
+    Position & operator=( const Position & rhs )
+    {
+        roll = rhs.roll;
+        col = rhs.col;
+
+        return *this;
+    }
+
 };
 
 #endif

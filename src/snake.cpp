@@ -1,5 +1,10 @@
 #include "snake.h"
 
+void Snake::bind_level( Level & l_ )
+{
+    *lvl = l_;
+}
+
 Position Snake::get_position( void) 
 {
     return body.front();

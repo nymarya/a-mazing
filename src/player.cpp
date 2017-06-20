@@ -35,6 +35,16 @@ struct KeyEqual{
     }
 };
 
+void Player::bind_level( Level & l_ )
+{
+	*lvl = l_;
+}
+
+void Player::bind_snake( Snake & s_ )
+{
+	*snk = s_;
+}
+
 direction_t Player::next_move()
 {
 	if( not m_solution.empty() ){
@@ -54,10 +64,8 @@ Player::Player()
   
 }
 
-bool Player::find_solution ( std::vector<std::string> & map, Position initial_pos )
+bool Player::find_solution ( Position initial_pos )
 {
-	Level lvl;
-	lvl.load( map );
 
 	//<! Declarar movimento inicial
 	Move inicial;
@@ -84,7 +92,7 @@ bool Player::find_solution ( std::vector<std::string> & map, Position initial_po
 		possible_sol.pop();
 
 		///<! verifica se é a solução
-		if ( lvl.is_solution( x.pos ) )
+		if ( lvl->is_solution( x.pos ) )
 		{	
 			m_solution = x.dir;		
 
@@ -109,7 +117,7 @@ bool Player::find_solution ( std::vector<std::string> & map, Position initial_po
 
 				Move mv;
 				//<! verificar se não é bloqueado
-				if ( !lvl.is_blocked( direc ) and not pos_visit.retrieve( direc, mv) )
+				if ( !lvl->is_blocked( direc ) and not pos_visit.retrieve( direc, mv) )
 				{
 
 					Move ins;

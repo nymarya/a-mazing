@@ -4,7 +4,7 @@
 
 Level::Level()
 {
-    ls::list<data> lvl;
+    std::list<data> lvl;
     levels = lvl;
     m_current_lvl = 1;
     m_total_lvl = 1;

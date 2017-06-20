@@ -85,12 +85,16 @@ void Game::initialize (std::string filename){
     snake.update_state( Snake::SnakeState::RUN );
     snake.grow( level.get_start_position() );
 
-     auto map = level.get_level();
-     bool yes = player.find_solution( map, level.get_start_position() );
-     player.next_move();
-     if (yes){
-         player.print();
-     }
+    snake.bind_level( level );
+
+    player.bind_level( level );
+    player.bind_snake ( snake );
+
+    bool yes = player.find_solution( level.get_start_position() );
+    player.next_move();
+    if (yes){
+        player.print();
+    }
 }
 
 /// Processa eventos do jogo
@@ -101,9 +105,13 @@ void Game::process_events( void ){
         level.get_current_lvl() != level.get_total_lvls() )
     {
         level.next_level();     //!< Muda de nível
+                                
+        snake.bind_level( level );
+        player.bind_level( level );
+        
         level.generate_apple(); //!< Gera nova maçã
         auto map = level.get_level();
-        player.find_solution( map, level.get_start_position() ); //!< Busca a solução do novo nível
+        player.find_solution( level.get_start_position() ); //!< Busca a solução do novo nível
         player.print();
     } 
     //Se não tem mais maçãs nem níveis, fim de jogo
@@ -119,6 +127,10 @@ void Game::process_events( void ){
         if( snake.get_lifes() > 0 ){
             snake.die();
             level.next_level();
+
+            snake.bind_level( level );
+            player.bind_level( level );
+
         } else if( snake.get_lifes() == 0){
             snake.update_state( Snake::SnakeState::DEAD );
         }
@@ -146,10 +158,13 @@ void Game::update()
 
         if( level.get_apples() == 0 and level.get_current_lvl() != level.get_total_lvls() ){
             level.next_level();
+
+            snake.bind_level( level );
+            player.bind_level( level );
         }
         level.generate_apple();
         auto map = level.get_level();
-        player.find_solution( map, snake.get_body().front() );
+        player.find_solution( snake.get_body().front() );
         
     } else if( level.is_blocked( new_pos  ) ){
         // se for parede, CRASH

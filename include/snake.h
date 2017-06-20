@@ -32,6 +32,8 @@ class Snake {
         , state( SnakeState::RUN )
         {/*empty*/}
 
+        void bind_level( Level & l_ );
+
         /**
          * @brief      Retorna posição atual da cobra
          *
@@ -81,6 +83,11 @@ class Snake {
          */
         Snake::SnakeState get_state( void ) const;
 
+        /**
+         * @brief      Pega o corpo da cobra
+         *
+         * @return     O corpo da cobra.
+         */
         std::deque < Position > get_body( ) const;
 
         /**

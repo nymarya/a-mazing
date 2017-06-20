@@ -2,6 +2,7 @@
 #define _PLAYER_H_
 
 #include <stack>
+#include <list>
 #include "level.h"
 #include "snake.h"
 #include "Vector/vector.h"
@@ -32,7 +33,7 @@ class Player
 		int m_lifes;
 
 		Snake * snk;
-		Level *lvl;
+		Level * lvl;
 		
 
 	public:
@@ -41,6 +42,12 @@ class Player
 		* @brief      Construtor default;
 		*/
 		Player();
+
+		~Player() = default;
+
+		void bind_level( Level & l_ );
+
+		void bind_snake( Snake & s_ );
 
 		/**
 		* @brief      Retorna uma direção para a snake que faz parte da 
@@ -55,7 +62,7 @@ class Player
 		*
 		* @return     True se existe posição, false caso contrário
 		*/
-		bool find_solution ( std::vector<std::string> & map, Position initial_pos );
+		bool find_solution ( Position initial_pos );
 
 		void print();
 
