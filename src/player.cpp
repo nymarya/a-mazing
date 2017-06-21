@@ -66,6 +66,7 @@ Player::Player()
 
 bool Player::find_solution ( Position initial_pos )
 {
+	auto snake_inicial = snk->get_body();
 
 	//<! Declarar movimento inicial
 	Move inicial;
@@ -94,7 +95,8 @@ bool Player::find_solution ( Position initial_pos )
 		///<! verifica se é a solução
 		if ( lvl->is_solution( x.pos ) )
 		{	
-			m_solution = x.dir;		
+			m_solution = x.dir;
+			snk->set_body( snake_inicial );
 
 			return true;
 		}
@@ -116,16 +118,18 @@ bool Player::find_solution ( Position initial_pos )
 				direc.col  = de.weight  + x.pos.col;
 
 				Move mv;
+				if ( snk->is_snake( direc ) ) std::cout << ">>>BATEU EM: " << direc.roll << " " << direc.col << std::endl;
 				//<! verificar se não é bloqueado
-				if ( !lvl->is_blocked( direc ) and not pos_visit.retrieve( direc, mv) )
+				if ( (!lvl->is_blocked( direc )) and (!pos_visit.retrieve( direc, mv)) and (!snk->is_snake( direc )) )
 				{
-
+					snk->move( direc );
 					Move ins;
 					ins.pos = direc; //de onde veio
 					ins.dir = x.dir;
+					ins.snake_body = snk->get_body(); //<! atualiza a cobra
 					ins.dir.push_back(movements[ d ]); //direção que tomou
 					possible_sol.push( ins ); //adiciona move
-					
+										
 				}   	
 			}
 		}

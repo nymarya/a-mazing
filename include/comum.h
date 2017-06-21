@@ -47,10 +47,11 @@ struct Position{
         return *this;
     }
 
-    bool operator==( Position rhs)
+    bool operator==( const Position & rhs)
     {
         return (roll == rhs.roll and col == rhs.col);
     }
+
     bool operator!=( const Position & rhs )
     {
         return (roll != rhs.roll) or (col != rhs.col);

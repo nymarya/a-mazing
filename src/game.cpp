@@ -165,6 +165,7 @@ void Game::update()
         level.generate_apple();
         auto map = level.get_level();
         player.find_solution( snake.get_body().front() );
+        player.print();
         
     } else if( level.is_blocked( new_pos  ) ){
         // se for parede, CRASH

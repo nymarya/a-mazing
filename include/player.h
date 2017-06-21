@@ -13,6 +13,7 @@ struct Move
 {
 	Position pos;
 	std::vector<direction_t> dir;
+	std::deque < Position > snake_body;
 
 	Move & operator=( const Move & rhs )
 	{

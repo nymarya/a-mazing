@@ -4,6 +4,8 @@
 #include <deque>
 #include "comum.h"
 #include "level.h"
+#include <algorithm>
+
 
 //=== Classe que controla o jogo
 class Snake {
@@ -100,5 +102,10 @@ class Snake {
         int get_lifes() const;
 
         void die();
+
+        bool is_snake( const Position & pos );
+
+        void set_body(  std::deque < Position > & newBody );
+        
 };
 #endif
