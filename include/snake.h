@@ -32,6 +32,7 @@ class Snake {
         Snake(std::string h = "\u142F")
         : head( h )
         , state( SnakeState::RUN )
+        , m_lifes( 3 )
         {/*empty*/}
 
         void bind_level( Level & l_ );

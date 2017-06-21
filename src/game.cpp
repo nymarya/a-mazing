@@ -124,14 +124,18 @@ void Game::process_events( void ){
     else if( snake.get_state() == Snake::SnakeState::CRASH ) 
     {
         //Se o jogador ainda tiver vidas, muda de Nivel
-        if( snake.get_lifes() > 0 ){
+         if( snake.get_lifes() > 0 and (level.get_current_lvl() != level.get_total_lvls()) ){
             snake.die();
             level.next_level();
 
-            snake.bind_level( level );
-            player.bind_level( level );
+            snake.grow( level.get_start_position() );
+            snake.update_state( Snake::SnakeState::RUN );
+            auto res = player.find_solution( level.get_start_position() );
+            if(not res) snake.update_state( Snake::SnakeState::CRASH );
+            player.print();
 
-        } else if( snake.get_lifes() == 0){
+        } else {
+            std::cout << "morta feat enterrada\n";
             snake.update_state( Snake::SnakeState::DEAD );
         }
         // Caso contrario, cobra morre
@@ -151,8 +155,16 @@ void Game::update()
 
     auto new_pos = snake.get_position() + direction[(int)dir];
 
+    if( snake.get_state() == Snake::SnakeState::DEAD) return;
+
+     if( dir == direction_t::NONE or level.is_blocked( new_pos  ) )
+    {
+        std::cout << "bateu";
+        snake.update_state( Snake::SnakeState::CRASH );
+        std::cout << "bateu msm\n";
+    }
     //Se a nova posição for a mação, cresce
-    if( level.is_solution( new_pos ) ){
+    else if( level.is_solution( new_pos ) ){
         snake.grow( new_pos );
         level.update_apples();
 
@@ -167,10 +179,9 @@ void Game::update()
         player.find_solution( snake.get_body().front() );
         player.print();
         
-    } else if( level.is_blocked( new_pos  ) ){
-        // se for parede, CRASH
-        snake.update_state( Snake::SnakeState::CRASH );
-    } else{
+    } 
+    else
+    {
         snake.move( new_pos);
     }
 
@@ -220,7 +231,6 @@ void Game::render()
 }
 
 bool Game::game_over(){
-    return ( (snake.get_state() == Snake::SnakeState::DEAD  and 
-                level.get_current_lvl() == level.get_total_lvls() )
+    return ( (snake.get_state() == Snake::SnakeState::DEAD )
                 or (snake.get_state() == Snake::SnakeState::WIN ) );
 }
