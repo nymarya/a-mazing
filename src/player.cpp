@@ -68,6 +68,8 @@ bool Player::find_solution ( Position initial_pos )
 {
 	auto snake_inicial = snk->get_body();
 
+	lvl->print_lvl();
+
 	//<! Declarar movimento inicial
 	Move inicial;
 	inicial.pos = initial_pos;
@@ -118,7 +120,7 @@ bool Player::find_solution ( Position initial_pos )
 				direc.col  = de.weight  + x.pos.col;
 
 				Move mv;
-				if ( snk->is_snake( direc ) ) std::cout << ">>>BATEU EM: " << direc.roll << " " << direc.col << std::endl;
+				//if ( snk->is_snake( direc ) ) std::cout << ">>>BATEU EM: " << direc.roll << " " << direc.col << std::endl;
 				//<! verificar se não é bloqueado
 				if ( (!lvl->is_blocked( direc )) and (!pos_visit.retrieve( direc, mv)) and (!snk->is_snake( direc )) )
 				{
@@ -127,6 +129,9 @@ bool Player::find_solution ( Position initial_pos )
 					ins.pos = direc; //de onde veio
 					ins.dir = x.dir;
 					ins.snake_body = snk->get_body(); //<! atualiza a cobra
+					// std::cout << "cobra eh :\n";
+					// for( auto i( ins.snake_body.begin()); i != ins.snake_body.end(); ++i  )
+					// 	std::cout << i->roll << " " << i->col << std::endl;
 					ins.dir.push_back(movements[ d ]); //direção que tomou
 					possible_sol.push( ins ); //adiciona move
 										
@@ -148,6 +153,7 @@ void Player::print ()
 		else if ( *i == direction_t::EAST ) std::cout << cont << " EAST\n";
 		else if ( *i == direction_t::WEST ) std::cout << cont << " WEST\n";
 		else if ( *i == direction_t::STATIC ) std::cout << cont << " Inicio\n";
+		else std::cout << "outro\n";
 
 		cont++;
 	}

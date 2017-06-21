@@ -29,8 +29,7 @@ int main(int argc, char** argv){
 	 while( not game.game_over()){
 	 	game.process_events();
 		game.update();
-	 	game.render();
-	 	
+	 	//game.render();
 	 }
 
 

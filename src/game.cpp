@@ -72,14 +72,9 @@ void Game::initialize (std::string filename){
     level.load( filename );
 
     //!< Gera maçã
-    //level.next_level();
+    level.next_level();
     //level.next_level();
     level.generate_apple();
-
-    // auto map = level.get_level();
-    // player.find_solution( map, level.get_start_position() );
-    // player.next_move();
-    
 
     //!< Gera snake
     snake.update_state( Snake::SnakeState::RUN );
@@ -107,9 +102,15 @@ void Game::process_events( void ){
         level.next_level();     //!< Muda de nível
                                 
         snake.bind_level( level );
-        player.bind_level( level );
-        
+
+        snake.reset();
+        snake.grow( level.get_start_position() );
+
         level.generate_apple(); //!< Gera nova maçã
+        auto ap = level.get_apple();
+        std::cout << "maca " << ap.roll << " " << ap.col <<std::endl;
+
+        player.bind_level( level );
         auto map = level.get_level();
         player.find_solution( level.get_start_position() ); //!< Busca a solução do novo nível
         player.print();
@@ -127,10 +128,17 @@ void Game::process_events( void ){
          if( snake.get_lifes() > 0 and (level.get_current_lvl() != level.get_total_lvls()) ){
             snake.die();
             level.next_level();
-
+            snake.reset();
             snake.grow( level.get_start_position() );
             snake.update_state( Snake::SnakeState::RUN );
-            auto res = player.find_solution( level.get_start_position() );
+
+            level.generate_apple(); //!< Gera nova maçã
+            auto ap = level.get_apple();
+            std::cout << "maca dps do crash " << ap.roll << " " << ap.col <<std::endl;
+
+            player.bind_level( level );
+
+            auto res = player.find_solution( snake.get_body().front() );
             if(not res) snake.update_state( Snake::SnakeState::CRASH );
             player.print();
 
@@ -157,11 +165,9 @@ void Game::update()
 
     if( snake.get_state() == Snake::SnakeState::DEAD) return;
 
-     if( dir == direction_t::NONE or level.is_blocked( new_pos  ) )
+    if( dir == direction_t::NONE or level.is_blocked( new_pos  ) )
     {
-        std::cout << "bateu";
         snake.update_state( Snake::SnakeState::CRASH );
-        std::cout << "bateu msm\n";
     }
     //Se a nova posição for a mação, cresce
     else if( level.is_solution( new_pos ) ){
@@ -170,11 +176,14 @@ void Game::update()
 
         if( level.get_apples() == 0 and level.get_current_lvl() != level.get_total_lvls() ){
             level.next_level();
-
+            snake.reset();
+            snake.grow( level.get_start_position() );
             snake.bind_level( level );
             player.bind_level( level );
         }
         level.generate_apple();
+        auto ap = level.get_apple();
+        std::cout << "maca nova " << ap.roll << " " << ap.col <<std::endl;
         auto map = level.get_level();
         player.find_solution( snake.get_body().front() );
         player.print();

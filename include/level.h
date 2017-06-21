@@ -220,6 +220,11 @@ public:
 		return *this;
 	}
 
+	Position get_apple()
+	{
+		return m_apple_pos;
+	}
+
 };
 
 

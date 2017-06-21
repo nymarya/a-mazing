@@ -107,6 +107,10 @@ class Snake {
         bool is_snake( const Position & pos );
 
         void set_body(  std::deque < Position > & newBody );
+
+        void reset(){
+            body.clear();
+        }
         
 };
 #endif

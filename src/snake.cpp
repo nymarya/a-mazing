@@ -2,8 +2,6 @@
 
 void Snake::bind_level( Level & l_ )
 {
-
-    std::cout << "Entrou no bind_level" << l_.get_level().size() << std::endl;
     lvl = &l_;
 }
 
@@ -95,7 +93,7 @@ bool Snake::is_snake( const Position & pos )
     auto end = body.end();
     auto res = std::find( it, end-1, pos);
 
-    if (res != end-1) return true;
+    if (res != end-1 and res != it) return true;
     else return false;
 }
 
