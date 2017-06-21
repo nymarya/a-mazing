@@ -201,6 +201,8 @@ type_level Level::get_level ()
 
 void Level::next_level ()
 {
+    std::cout << "trocou\n";
+
     levels.pop_front();
     m_current_lvl++;
 }

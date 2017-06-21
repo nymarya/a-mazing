@@ -2,9 +2,9 @@
 ls::vector<Direction> direction = 
 {
 	Direction(-1, 0), //north
+	Direction(0, 1),   //west
 	Direction(1, 0),  //south
 	Direction(0, -1), //east
-	Direction(0, 1)   //west
 };
 
 Game::Result Game::validate( std::string filename){
@@ -72,7 +72,7 @@ void Game::initialize (std::string filename){
     level.load( filename );
 
     //!< Gera maçã
-    level.next_level();
+    //level.next_level();
     //level.next_level();
     level.generate_apple();
 
@@ -139,7 +139,6 @@ void Game::process_events( void ){
             player.bind_level( level );
 
             auto res = player.find_solution( snake.get_body().front() );
-            if(not res) snake.update_state( Snake::SnakeState::CRASH );
             player.print();
 
         } else {
@@ -165,8 +164,9 @@ void Game::update()
 
     if( snake.get_state() == Snake::SnakeState::DEAD) return;
 
-    if( dir == direction_t::NONE or level.is_blocked( new_pos  ) )
+    if( dir == direction_t::NONE or (dir != direction_t::STATIC and level.is_blocked( new_pos  )) )
     {
+        std::cout << "tenta ir " << (int) dir << ": "<< new_pos.roll << " " << new_pos.col << std::endl;
         snake.update_state( Snake::SnakeState::CRASH );
     }
     //Se a nova posição for a mação, cresce
@@ -183,7 +183,6 @@ void Game::update()
         }
         level.generate_apple();
         auto ap = level.get_apple();
-        std::cout << "maca nova " << ap.roll << " " << ap.col <<std::endl;
         auto map = level.get_level();
         player.find_solution( snake.get_body().front() );
         player.print();
@@ -214,6 +213,7 @@ void Game::render()
             std::cout << "\u2661 ";
         }
     }
+    std::cout << std::right << std::setw(3) << level.get_apples() << " ";
     std::cout <<"\n"<< std::setw(50) << std::setfill('-' ) << "" << std::endl << std::endl;
 
     auto map = level.get_level();
