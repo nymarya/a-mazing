@@ -190,7 +190,22 @@ void Game::update()
 
 void Game::render()
 {
-    std::this_thread::sleep_for (std::chrono::milliseconds(150)); //!< Delay
+    auto factor = level.get_current_lvl() * 2 / 10;
+    std::this_thread::sleep_for (std::chrono::milliseconds(150 + 150 * factor )); //!< Delay
+    std::cout << snake.get_lifes() <<std::endl;
+    
+    std::cout << std::setw(50) << std::setfill( '-' ) << "" << std::endl;
+    std::cout << std::right << std::setw(3);
+    auto lifes = snake.get_lifes();
+    for( auto i(0); i < 3; ++i){
+        if( lifes > 0){
+            std::cout << "\u2665 ";
+            lifes--;
+        } else{
+            std::cout << "\u2661 ";
+        }
+    }
+    std::cout <<"\n"<< std::setw(50) << std::setfill('-' ) << "" << std::endl << std::endl;
 
     auto map = level.get_level();
     auto snake_body = snake.get_body();
