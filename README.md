@@ -12,6 +12,7 @@ O jogo Snaze (Snake Trapped in a Maze) funciona.
 | ```$ ./snaze <arquivo>``` | Executar | 
 
 Para que o arquivo seja válido, é necessário usar os símbolos listados abaixo:
+
 | Símbolo     | Significado           |
 | :------------- |:-------------|
 | #      | Parede do labirinto |
