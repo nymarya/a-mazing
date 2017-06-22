@@ -2,7 +2,7 @@
 
 ## Sobre o projeto
 
-O jogo Snaze (Snake Trapped in a Maze) funciona.
+O jogo Snaze (Snake Trapped in a Maze) consiste em uma cobra que tenta achar sua comida dentro de um labirinto.
 
 ## Como executar
 
