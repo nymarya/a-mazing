@@ -36,7 +36,7 @@ Game::Result Game::validate( std::string filename){
                     or rolls > Game::MAX_SIZE or cols > Game::MAX_SIZE){
                     
                     result.success = false;
-                    result.message = "Nivel "+ std::to_string(grid) +": Dimensões fora do intervalo permitido!";
+                    result.message = "Level "+ std::to_string(grid) +": Dimensions out of range!";
                     return result;
                 }
                 
@@ -48,7 +48,7 @@ Game::Result Game::validate( std::string filename){
                     //do que o número de colunas, retorna erro
                     if( line.size() < cols){
                         result.success = false;
-                        result.message = "Nivel " + std::to_string(grid) + ": Labirinto inválido!";
+                        result.message = "Level " + std::to_string(grid) + ": Invalid maze!";
                         return result;
                     }
                     rolls--;
