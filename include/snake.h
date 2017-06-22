@@ -1,3 +1,10 @@
+/**
+ * @file level.h
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as definições da classe Snake.
+ */
+
 #ifndef _SNAKE_H_
 #define _SNAKE_H_
 
@@ -100,14 +107,38 @@ class Snake {
          */
         std::size_t size() const;
 
-        int get_lifes() const;
+        /**
+         * @brief      Recupera a quantidade de vidas
+         *
+         * @return     As vidas restantes
+         */
+        int get_lifes() const;  
 
+        /**
+         * @brief      Faz a cobra morrer
+         */
         void die();
 
+        /**
+         * @brief      Verifica se em uma posição encontra-se alguma
+         *             parte da snake
+         *
+         * @param[in]  pos   A snake
+         *
+         * @return     True se snake, False caso contrário.
+         */
         bool is_snake( const Position & pos );
 
+        /**
+         * @brief      Seta um novo corpo para a cobra
+         *
+         * @param      newBody  O novo corpo
+         */
         void set_body(  std::deque < Position > & newBody );
 
+        /**
+         * @brief      Reseta a posição da cobra
+         */
         void reset(){
             body.clear();
         }

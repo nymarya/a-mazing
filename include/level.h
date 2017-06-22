@@ -1,3 +1,11 @@
+/**
+ * @file level.h
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as definições da classe Level.
+ */
+
+
 #ifndef _LEVEL_H_
 #define _LEVEL_H_
 
@@ -10,9 +18,12 @@
 #include "comum.h"
 #include "List/list.h"
 
-
+//<! tipo de um mapa do level
 using type_level = std::vector<std::string>;
 
+/**
+ * @brief      Classe para os leveis do jogo
+ */
 class Level
 {
 
@@ -30,14 +41,17 @@ class Level
 
 private:
 
+	/**
+	 * @brief      Dados de um jogo
+	 */
 	struct data
 	{
-		size_t m_rolls;
-		size_t m_cols;
-		size_t m_start_roll;
-		size_t m_start_col;
-		int m_apples;
-		type_level lvl;
+		size_t m_rolls;  //<! números de linhas
+		size_t m_cols;	 //<! número de colunas
+		size_t m_start_roll; //<! linha inicial da cobra
+		size_t m_start_col;	 //<! coluna inicial da cobra
+		int m_apples;		//<! quantidade de maçãs do nível
+		type_level lvl;		//<! mapa do level
 
 		/**
 		 * @brief      Construtor básico
@@ -52,6 +66,13 @@ private:
 			/*empty*/ 
 		}
 
+		/**
+		 * @brief      atribui um novo dara
+		 *
+		 * @param[in]  rhs   o data a ser atribuido
+		 *
+		 * @return    	o novo data
+		 */
 		data & operator=( const data & rhs )
 		{
 			std::cout << rhs.lvl.size() << std::endl;
@@ -67,10 +88,10 @@ private:
 		}
 	};
 
-	std::list<data> levels;
-	int m_current_lvl;
-	int m_total_lvl;
-	Position m_apple_pos;
+	std::list<data> levels; //<! lista contendo os níveis
+	int m_current_lvl;		//<! level atual
+	int m_total_lvl;		//<! Total de level carregados 
+	Position m_apple_pos;	//<! Posição da maçã no level
 	
 
 public:
@@ -92,6 +113,11 @@ public:
 	 */
 	void load ( std::string filename );
 
+	/**
+	 * @brief      Constroi um novo objeto por meio de um mapa
+	 *
+	 * @param[in]  new_map  O novo mapa
+	 */
 	void load ( std::vector< std::string > new_map);
 
 	/**
@@ -193,8 +219,18 @@ public:
 	 */
 	int get_current_lvl ();
 
+	/**
+	 * @brief      Recupera a quantidade de linhas de uma fase
+	 *
+	 * @return     A quantidade de linhas
+	 */
 	size_t get_rolls() const;
 
+	/**
+	 * @brief      Recupera a quantidades de colunas de uma fase
+	 *
+	 * @return     A quantidade de colunas
+	 */
 	size_t get_cols() const;
 
 	/**
@@ -207,6 +243,13 @@ public:
 	 */
 	bool is_decision ( const Position & pos );
 
+	/**
+	 * @brief      Atribui um novo nível
+	 *
+	 * @param[in]  rhs   O nível a ser atribuido
+	 *
+	 * @return     O novo level
+	 */
 	Level & operator=( const Level & rhs )
 	{
 		levels.resize( rhs.levels.size() );
@@ -220,6 +263,11 @@ public:
 		return *this;
 	}
 
+	/**
+	 * @brief      Recupera a posição da maçã
+	 *
+	 * @return     A posição da maçã
+	 */
 	Position get_apple()
 	{
 		return m_apple_pos;

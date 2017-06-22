@@ -1,3 +1,10 @@
+/**
+ * @file player.h
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as definições da classe Player.
+ */
+
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
@@ -9,12 +16,22 @@
 #include "Hash/hash_tbl.h"
 #include "comum.h"
 
+/**
+ * @brief      Define o que significa um movimento
+ */
 struct Move
 {
-	Position pos;
-	std::vector<direction_t> dir;
-	std::deque < Position > snake_body;
+	Position pos; //<! A posição do movimento
+	std::vector<direction_t> dir; //<! As direções tomadas para chegar nessa posição
+	std::deque < Position > snake_body;	//<! A posição da snake naquela posição
 
+	/**
+	 * @brief      Atribui um novo movimento
+	 *
+	 * @param[in]  rhs   O novo movimento para ser atribuido
+	 *
+	 * @return     O novo movimento 
+	 */
 	Move & operator=( const Move & rhs )
 	{
 		pos.roll = rhs.pos.roll;
@@ -25,16 +42,19 @@ struct Move
 	}
 };
 
+/**
+ * @brief      Classe para o Player
+ */
 class Player
 {
 
 	private:
 		
-		std::vector<direction_t> m_solution;
-		int m_lifes;
+		std::vector<direction_t> m_solution; //<! Direções para se chegar a uma solução
+		int m_lifes; //<! quantidade de vidas restates
 
-		Snake * snk;
-		Level * lvl;
+		Snake * snk; //<! Ponteiro para a snake
+		Level * lvl; //<! Ponteiro para o level
 		
 
 	public:
@@ -44,10 +64,23 @@ class Player
 		*/
 		Player();
 
+		/**
+		 * @brief      Destrói o objeto
+		 */
 		~Player() = default;
 
+		/**
+		 * @brief      Faz o jogador ter acesso ao level atual
+		 *
+		 * @param      l_    o level atual
+		 */
 		void bind_level( Level & l_ );
 
+		/**
+		 * @brief      Faz o jogador ter acesso a snake
+		 *
+		 * @param      s_   snake
+		 */
 		void bind_snake( Snake & s_ );
 
 		/**
@@ -65,6 +98,9 @@ class Player
 		*/
 		bool find_solution ( Position initial_pos );
 
+		/**
+		 * @brief      Imprime a solução encontrada pelo player
+		 */
 		void print();
 
 };

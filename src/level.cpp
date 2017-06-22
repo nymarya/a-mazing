@@ -1,7 +1,15 @@
+/**
+ * @file level.cpp
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as implementações da classe Level.
+ */
+
 #include "level.h"
 #include <fstream>
 #include <sstream>
 
+//<! Construtor
 Level::Level()
 {
     std::list<data> lvl;
@@ -9,6 +17,7 @@ Level::Level()
     m_current_lvl = 1;
     m_total_lvl = 1;
 }
+
 //<! carrega os levels enviados
 void Level::load( std::string filename )
 {
@@ -77,6 +86,7 @@ void Level::load( std::string filename )
     file.close();
 }
 
+//<! Recebe um mapa e retorna um novo objeto referente ao mapa
 void Level::load( std::vector<std::string> new_map){
     data d;
     d.m_rolls = new_map.size();
@@ -95,6 +105,7 @@ void Level::load( std::vector<std::string> new_map){
     levels.push_back( d );
 }
 
+//<!  Imprime uma fase
 void Level::print_lvl ()
 {
     auto current_lvl = levels.front();
@@ -107,6 +118,7 @@ void Level::print_lvl ()
     }
 }
 
+//<! Verifica se uma posição do mapa é bloqueada
 bool Level::is_blocked ( const Position & pos )
 {
 	auto roll = pos.roll;
@@ -120,6 +132,7 @@ bool Level::is_blocked ( const Position & pos )
 	else return false;
 }
 
+//<! Verifica se uma posição é a solução
 bool Level::is_solution ( const Position & pos )
 {
 	auto roll = pos.roll;
@@ -131,12 +144,14 @@ bool Level::is_solution ( const Position & pos )
 	else return false; 
 }
 
+//<! Recupera a quantidade de maçãs restantes
 int Level::get_apples( )
 {
     auto current_lvl = levels.front();
 	return current_lvl.m_apples;
 }
 
+//<! Gera aleatoriamente uma nova maçã no jogo
 void Level::generate_apple ()
 {
     auto current_lvl = levels.begin();
@@ -159,30 +174,35 @@ void Level::generate_apple ()
     m_apple_pos = apple;
 }
 
+//<! Atualiza a quantidade de maçãs restantes
 void Level::update_apples ()
 {
     auto current_lvl = levels.begin();
 	((*current_lvl).m_apples)--;
 }
 
+//<! marca uma posição como visitada
 void Level::mark_position( const Position & pos )
 {
     auto current_lvl = levels.begin();
 	(*current_lvl).lvl[pos.roll][pos.col] = 'x';
 }
 
+//<! Marca uma posição como não faz parte da solução
 void Level::mark_notsolution ( const Position & pos )
 {
     auto current_lvl = levels.begin();
 	(*current_lvl).lvl[pos.roll][pos.col] = '/';
 }
 
+//<! marca um ponto de decisão tomado para achar a solução
 void Level::mark_decision ( const Position & pos )
 {
     auto current_lvl = levels.begin();
 	(*current_lvl).lvl[pos.roll][pos.col] = 'd';
 }
 
+//<! retorna a posição inicial que a cobra deve está em uma fase
 Position Level::get_start_position ()
 {
     auto current_lvl = levels.begin();
@@ -193,38 +213,45 @@ Position Level::get_start_position ()
 	return pos;
 }
 
+//<! retorna o mapa do level atual
 type_level Level::get_level ()
 {
     auto current_lvl = levels.front();
 	return current_lvl.lvl;
 }
 
+//<! avança um nível
 void Level::next_level ()
 {
     levels.pop_front();
     m_current_lvl++;
 }
 
+//<! pega o total de vidas
 int Level::get_total_lvls ()
 {
     return m_total_lvl;
 }
 
+//<! diz em qual nível está no momento
 int Level::get_current_lvl ()
 {
     return m_current_lvl;
 }
 
+//<! pega a quantidade de linha do mapa
 size_t Level::get_rolls () const
 {
     return levels.front().m_rolls;
 }
 
+//<! pega a quantidade de colunas do mapa atual
 size_t Level::get_cols () const
 {
     return levels.front().m_cols;
 }
 
+//<! verifica se uma dada posição é um ponto de decisão
 bool Level::is_decision ( const Position & pos )
 {
     auto roll = pos.roll;

@@ -1,4 +1,13 @@
+/**
+ * @file game.cpp
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as implementações da classe Game.
+ */
+
 #include "game.h"
+
+//<! vector que anda posições para as respectivas direções
 ls::vector<Direction> direction = 
 {
 	Direction(-1, 0), //north
@@ -7,6 +16,7 @@ ls::vector<Direction> direction =
 	Direction(0, -1), //east
 };
 
+//<! valida se o arquivo com os levels são válidos
 Game::Result Game::validate( std::string filename){
     Result result;
 
@@ -64,6 +74,7 @@ Game::Result Game::validate( std::string filename){
 }
 
 
+//<! inicializa o jogo
 void Game::initialize (std::string filename){
 
     Result result;
@@ -181,6 +192,7 @@ void Game::update()
 
 }
 
+//<! imprime na tela o screenshot do jogo a cada novo ciclo
 void Game::render()
 {
     auto factor = level.get_current_lvl() * 2 / 10;
@@ -240,6 +252,7 @@ void Game::render()
   }
 }
 
+//<! Dis quando o jogo acaba
 bool Game::game_over(){
     return ( (snake.get_state() == Snake::SnakeState::DEAD )
                 or (snake.get_state() == Snake::SnakeState::WIN ) );

@@ -1,7 +1,14 @@
+/**
+ * @file player.cpp
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as implementações da classe Player.
+ */
+
 #include "player.h"
 #include <functional> //<! std::hash
 
-
+//<! vector que avança uma posição para alguma direção
 std::vector<Direction> directions = 
 {
 	Direction(-1, 0), //north
@@ -10,6 +17,7 @@ std::vector<Direction> directions =
 	Direction(0, -1), //east
 };
 
+//<! vector de possíveis direções tomadas
 std::vector<direction_t> movements =
 {
 	direction_t::NORTH,
@@ -35,16 +43,19 @@ struct KeyEqual{
     }
 };
 
+//<! faz o player acessar o level atual
 void Player::bind_level( Level & l_ )
 {
 	lvl = &l_;
 }
 
+//<! faz o level acessar a snake
 void Player::bind_snake( Snake & s_ )
 {
 	snk = &s_;
 }
 
+//<! consome um movimento da lista de direções para solução
 direction_t Player::next_move()
 {
 	if( not m_solution.empty() ){
@@ -56,6 +67,7 @@ direction_t Player::next_move()
 }
 
 
+//<! construtor 
 Player::Player()
 {
     std::vector<direction_t> sol;
@@ -64,6 +76,7 @@ Player::Player()
   
 }
 
+//<! procura pela solução
 bool Player::find_solution ( Position initial_pos )
 {
 	auto snake_inicial = snk->get_body();
@@ -136,6 +149,7 @@ bool Player::find_solution ( Position initial_pos )
 	return false;
 }
 
+//<! imprime a solução achada pelo find_solution
 void Player::print ()
 {
 	std::cout << ">>>SOLUTION<<<\n";

@@ -1,3 +1,10 @@
+/**
+ * @file game.h
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as definições da classe Game.
+ */
+
 #ifndef _GAME_H_
 #define _GAME_H_
 
@@ -16,6 +23,9 @@
 
 //=== Classe que controla o jogo
 
+/**
+ * @brief      Classe para o jogo
+ */
 class Game{
 
         //=== Membros privados
@@ -56,12 +66,28 @@ class Game{
          */
         void initialize (std::string filename);
 
+        /**
+         * @brief      Processa todos os eventos que ocorrem no jogo
+         */
         void process_events();
 
+        /**
+         * @brief      Atualiza todas as novas cenas do jogo
+         */
         void update();
 
+        /**
+         * @brief      Apresenta ao usuário um screshot da cena atual
+         *             em que se encontra o jogo, responsável por imprimir
+         *             a snake, labirinto, etc.
+         */
         void render();
 
+        /**
+         * @brief      Verifica se o jogo acabou
+         *
+         * @return     True se não há mais vidas, False caso contrário
+         */
         bool game_over();
 
 };

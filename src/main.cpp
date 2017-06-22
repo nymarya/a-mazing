@@ -1,4 +1,12 @@
-#include <iostream>
+/**
+ * @file main.cpp
+ * @authors Gabriel Araújo de Souza e Mayra Dantas de Azevedo
+ * @date 21 Junho 2017
+ * @brief Arquivo contendo as implementações do loop game e da apresentação
+ *        do jogo para o usuário por meio da saída padrão.
+ */
+
+#include <iostream> 
 #include <cassert>
 #include "game.h"
 #include "player.h"
@@ -22,6 +30,7 @@ int main(int argc, char** argv){
 	 	return EXIT_FAILURE;
 	 }
 
+	//<! boas vindas
 	game.initialize( argv[1]);
 	game.render();
 	
