@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <list>
 #include <iostream>
 #include <cstdlib>
 #include "comum.h"
@@ -46,10 +48,26 @@ private:
 			, m_start_roll(0)
 			, m_start_col(0)
 			, m_apples(5)
-		{/*empty*/}
+		{
+			/*empty*/ 
+		}
+
+		data & operator=( const data & rhs )
+		{
+			std::cout << rhs.lvl.size() << std::endl;
+
+			m_rolls = rhs.m_rolls;
+			m_cols = rhs.m_cols;
+			m_start_roll = rhs.m_start_roll;
+			m_start_col = rhs.m_start_col;
+			m_apples = rhs.m_apples;
+			lvl = rhs.lvl;
+
+			return *this;
+		}
 	};
 
-	ls::list<data> levels;
+	std::list<data> levels;
 	int m_current_lvl;
 	int m_total_lvl;
 	Position m_apple_pos;
@@ -188,6 +206,24 @@ public:
 	 * @return     True se decisão, False caso contrário.
 	 */
 	bool is_decision ( const Position & pos );
+
+	Level & operator=( const Level & rhs )
+	{
+		levels.resize( rhs.levels.size() );
+		std::cout << rhs.levels.size() << std::endl;
+		std::copy(rhs.levels.begin(), rhs.levels.end(), levels.begin() );
+		//levels = rhs.levels;
+		m_current_lvl = rhs.m_current_lvl;
+		m_total_lvl = rhs.m_total_lvl;
+		m_apple_pos = rhs.m_apple_pos;
+
+		return *this;
+	}
+
+	Position get_apple()
+	{
+		return m_apple_pos;
+	}
 
 };
 

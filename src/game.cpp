@@ -2,9 +2,9 @@
 ls::vector<Direction> direction = 
 {
 	Direction(-1, 0), //north
+	Direction(0, 1),   //west
 	Direction(1, 0),  //south
 	Direction(0, -1), //east
-	Direction(0, 1)   //west
 };
 
 Game::Result Game::validate( std::string filename){
@@ -36,7 +36,7 @@ Game::Result Game::validate( std::string filename){
                     or rolls > Game::MAX_SIZE or cols > Game::MAX_SIZE){
                     
                     result.success = false;
-                    result.message = "Nivel "+ std::to_string(grid) +": Dimensões fora do intervalo permitido!";
+                    result.message = "Level "+ std::to_string(grid) +": Dimensions out of range!";
                     return result;
                 }
                 
@@ -48,7 +48,7 @@ Game::Result Game::validate( std::string filename){
                     //do que o número de colunas, retorna erro
                     if( line.size() < cols){
                         result.success = false;
-                        result.message = "Nivel " + std::to_string(grid) + ": Labirinto inválido!";
+                        result.message = "Level " + std::to_string(grid) + ": Invalid maze!";
                         return result;
                     }
                     rolls--;
@@ -72,25 +72,22 @@ void Game::initialize (std::string filename){
     level.load( filename );
 
     //!< Gera maçã
-    //level.next_level();
-    //level.next_level();
     level.generate_apple();
-
-    // auto map = level.get_level();
-    // player.find_solution( map, level.get_start_position() );
-    // player.next_move();
-    
 
     //!< Gera snake
     snake.update_state( Snake::SnakeState::RUN );
     snake.grow( level.get_start_position() );
 
-     auto map = level.get_level();
-     bool yes = player.find_solution( map, level.get_start_position() );
-     player.next_move();
-     if (yes){
-         player.print();
-     }
+    snake.bind_level( level );
+
+    player.bind_level( level );
+    player.bind_snake ( snake );
+
+    bool yes = player.find_solution( level.get_start_position() );
+    player.next_move();
+    if (yes){
+        player.print();
+    }
 }
 
 /// Processa eventos do jogo
@@ -101,10 +98,17 @@ void Game::process_events( void ){
         level.get_current_lvl() != level.get_total_lvls() )
     {
         level.next_level();     //!< Muda de nível
+                                
+        snake.bind_level( level );
+
+        snake.reset();
+        snake.grow( level.get_start_position() );
+
         level.generate_apple(); //!< Gera nova maçã
-        auto map = level.get_level();
-        player.find_solution( map, level.get_start_position() ); //!< Busca a solução do novo nível
-        player.print();
+
+        player.bind_level( level );
+        
+        player.find_solution( level.get_start_position() ); //!< Busca a solução do novo nível
     } 
     //Se não tem mais maçãs nem níveis, fim de jogo
     else if ( level.get_apples() == 0 and 
@@ -116,10 +120,19 @@ void Game::process_events( void ){
     else if( snake.get_state() == Snake::SnakeState::CRASH ) 
     {
         //Se o jogador ainda tiver vidas, muda de Nivel
-        if( snake.get_lifes() > 0 ){
+         if( snake.get_lifes() > 0 and (level.get_current_lvl() != level.get_total_lvls()) ){
             snake.die();
             level.next_level();
-        } else if( snake.get_lifes() == 0){
+            snake.reset();
+            snake.grow( level.get_start_position() );
+            snake.update_state( Snake::SnakeState::RUN );
+
+            level.generate_apple(); //!< Gera nova maçã
+
+            player.bind_level( level );
+
+            player.find_solution( snake.get_body().front() );
+        } else {
             snake.update_state( Snake::SnakeState::DEAD );
         }
         // Caso contrario, cobra morre
@@ -139,22 +152,29 @@ void Game::update()
 
     auto new_pos = snake.get_position() + direction[(int)dir];
 
+    if( snake.get_state() == Snake::SnakeState::DEAD) return;
+
+    if( dir == direction_t::NONE or (dir != direction_t::STATIC and level.is_blocked( new_pos  )) )
+    {
+        snake.update_state( Snake::SnakeState::CRASH );
+    }
     //Se a nova posição for a mação, cresce
-    if( level.is_solution( new_pos ) ){
+    else if( level.is_solution( new_pos ) ){
         snake.grow( new_pos );
         level.update_apples();
 
         if( level.get_apples() == 0 and level.get_current_lvl() != level.get_total_lvls() ){
             level.next_level();
+            snake.reset();
+            snake.grow( level.get_start_position() );
+            snake.bind_level( level );
+            player.bind_level( level );
         }
         level.generate_apple();
-        auto map = level.get_level();
-        player.find_solution( map, snake.get_body().front() );
-        
-    } else if( level.is_blocked( new_pos  ) ){
-        // se for parede, CRASH
-        snake.update_state( Snake::SnakeState::CRASH );
-    } else{
+        player.find_solution( snake.get_body().front() );
+    } 
+    else
+    {
         snake.move( new_pos);
     }
 
@@ -163,7 +183,24 @@ void Game::update()
 
 void Game::render()
 {
-    std::this_thread::sleep_for (std::chrono::milliseconds(150)); //!< Delay
+    auto factor = level.get_current_lvl() * 2 / 10;
+    std::this_thread::sleep_for (std::chrono::milliseconds(150 + 150 * factor )); //!< Delay
+    std::cout << snake.get_lifes() <<std::endl;
+    
+    std::cout << std::setw(50) << std::setfill( '-' ) << "" << std::endl;
+    std::cout << std::right << std::setw(3);
+    auto lifes = snake.get_lifes();
+    for( auto i(0); i < 3; ++i){
+        if( lifes > 0){
+            std::cout << "\u2665 ";
+            lifes--;
+        } else{
+            std::cout << "\u2661 ";
+        }
+    }
+    std::cout << std::right << std::setw(3) << std::setfill(' ' ) << level.get_apples()<< " ";
+    std::cout << "remaining apples";
+    std::cout <<"\n"<< std::setw(50) << std::setfill('-' ) << "" << std::endl << std::endl;
 
     auto map = level.get_level();
     auto snake_body = snake.get_body();
@@ -204,7 +241,6 @@ void Game::render()
 }
 
 bool Game::game_over(){
-    return ( (snake.get_state() == Snake::SnakeState::DEAD  and 
-                level.get_current_lvl() == level.get_total_lvls() )
+    return ( (snake.get_state() == Snake::SnakeState::DEAD )
                 or (snake.get_state() == Snake::SnakeState::WIN ) );
 }

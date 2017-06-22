@@ -8,9 +8,9 @@
 enum class direction_t : int
 {
     NORTH = 0,  // ( 0, -1) => (-1, 0)
+    WEST,       // ( 1,  0) => (0, 1)
     SOUTH,      // ( 0,  1) => (1, 0)
     EAST,       // (-1,  0) => (0, -1)
-    WEST,       // ( 1,  0) => (0, 1)
     STATIC,     // (0, 0)
     NONE,
 };
@@ -47,13 +47,22 @@ struct Position{
         return *this;
     }
 
-    bool operator==( Position rhs)
+    bool operator==( const Position & rhs)
     {
         return (roll == rhs.roll and col == rhs.col);
     }
+
     bool operator!=( const Position & rhs )
     {
         return (roll != rhs.roll) or (col != rhs.col);
+    }
+
+    Position & operator=( const Position & rhs )
+    {
+        roll = rhs.roll;
+        col = rhs.col;
+
+        return *this;
     }
 
 };

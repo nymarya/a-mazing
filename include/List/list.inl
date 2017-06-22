@@ -1,401 +1,552 @@
-/**
- * @file list.inl
- * @author Gabriel Araújo de Souza
- * @date 02 Jun 2017
- * @brief Arquivo contendo as implementações das classes list
- *        const_iterator e iterator.
- */
+#include "list.h"
+#include <cassert>
+#include <stdexcept>
 
-// [I] const iterator
-
-//<! Retorna o valor do nó apontado.
+///////////////////////////
+// [I] MEMBROS ESPECIAIS //
+///////////////////////////
+/*! Construtor padrão. */
 template <typename T>
-const T
-& ls::list<T>::const_iterator::operator* ( ) const
+ls::List<T>::List()
+:m_size(0)
+,m_head(new Node())
+,m_tail(new Node())
 {
-	assert( current != nullptr );
-	return current->data;
-}
-
-//<! Avança o iterador.
-template <typename T>
-typename ls::list<T>::const_iterator
-& ls::list<T>::const_iterator::operator++ ( ) // ++it;
-{
-	current = current->next;
-	return *this;
-}
-
-//<! Avança o iterador
-template <typename T>
-typename ls::list<T>::const_iterator
-ls::list<T>::const_iterator::operator++ ( int ) // it++;
-{
-	const_iterator temp = *this;
-	current = current->next;
-	return temp;
-}
-
-//<! Iterador vai para o nó anterior
-template <typename T>
-typename ls::list<T>::const_iterator
-& ls::list<T>::const_iterator::operator-- ( ) // --it;
-{
-	current = current->prev;
-	return *this;
-}
-
-//<! Iterador vai para o nó anterior
-template <typename T>
-typename ls::list<T>::const_iterator
-ls::list<T>::const_iterator::operator-- ( int ) // it--;
-{
-	const_iterator temp = *this;
-	current = current->prev;
-	return temp;
-}
-
-//<! Compara se dois iteradores são iguais
-template <typename T>
-bool ls::list<T>::const_iterator::operator==
-( const const_iterator & rhs ) const
-{
-	return current == rhs.current;
-}
-
-//<! Compara se dois iteradores são diferentes
-template <typename T>
-bool ls::list<T>::const_iterator::operator!=
-( const const_iterator & rhs ) const
-{
-	return current != rhs.current;
-}
-
-//[II] iterator
-
-//<! Retorna o valor constante apontado pelo iterador
-template <typename T>
-const T & ls::list<T>::iterator::operator* ( ) const
-{
-	assert( const_iterator::current != nullptr );
-	return const_iterator::current->data;
-}
-
-//<! Retorna o valor apontado pelo iterador
-template <typename T>
-T & ls::list<T>::iterator::operator* ( )
-{
-	assert( const_iterator::current != nullptr );
-	return const_iterator::current->data;
-}
-
-//<! Avança o iterador para a próxima posição
-template <typename T>
-typename ls::list<T>::iterator
-& ls::list<T>::iterator::operator++ ( )
-{
-	const_iterator::current = const_iterator::current->next;
-    return *this;
-}
-
-//<! Avança o iterador para a próxima posição
-template <typename T>
-typename ls::list<T>::iterator
-ls::list<T>::iterator::operator++ ( int )
-{
-	iterator temp = *this;
-	const_iterator::current = const_iterator::current->next;
-    return temp;
-
-}
-
-//<! O iterador vai para a posição anterior
-template <typename T>
-typename ls::list<T>::iterator
-& ls::list<T>::iterator::operator--( )
-{
-	const_iterator::current = const_iterator::current->prev;
-	return *this;
-}
-
-//<! O iterador vai para a posição anterior
-template <typename T>
-typename ls::list<T>::iterator 
-ls::list<T>::iterator::operator--( int )
-{
-	iterator temp = *this;
-	const_iterator::current = const_iterator::current->prev;
-	return temp;
-}
-
-// [III] list
-
-//<! Retorna iterador para o primeiro nó da lista
-template <typename T>
-typename ls::list<T>::iterator
-ls::list<T>::begin( )
-{
-	return iterator(m_head->next);
-}
-
-//<! Retorna iterador constante para o primeiro nó da lista
-template <typename T>
-typename ls::list<T>::const_iterator
-ls::list<T>::cbegin( ) const
-{
-	return const_iterator(m_head->next);
-}
-
-//<! Retorna iterador para a posição logo após o último nó
-template <typename T>
-typename ls::list<T>::iterator
-ls::list<T>::end( )
-{
-	return iterator(m_tail);
-}
-
-//<! Retorna iterador constante para a posição logo após o último nó
-template <typename T>
-typename ls::list<T>::const_iterator
-ls::list<T>::cend( ) const
-{
-	return const_iterator(m_tail);
-}
-
-//<! Retorna o tamanho da lista
-template <typename T>
-int ls::list<T>::size( ) const
-{
-	return m_size;
-}
-
-//<! Verifica se a lista está vazia
-template <typename T>
-bool ls::list<T>::empty( ) const
-{
-	return m_size == 0;
-}
-
-//<! Apaga a lista
-template <typename T>
-void ls::list<T>::clear( )
-{
-	Node * current = m_head->next;
-
-	while ( current != m_tail )
-	{
-		Node * temp = current;
-		current = current->next;
-		delete temp;
-	}
-
-	m_size = 0;
 	m_head->next = m_tail;
 	m_tail->prev = m_head;
 }
 
-//<! Retorna o valor do primeiro nó
+/*! Constrói a lista com count cópias de T. */
 template <typename T>
-T & ls::list<T>::front( )
+ls::List<T>::List(size_type count)
+:m_size(count)
+,m_head(new Node())
+,m_tail(new Node())
 {
-	auto aux = m_head->next;
-	return aux->data;
+	m_head->next = m_tail;
+	m_tail->prev = m_head;
+	auto current(m_head);
+	while(count-- > 0){
+		//<!Cria novo nó
+		auto n_node = new Node(T(), current, current->next);
+
+		//<!O anterior do next aponta para o novo
+		current->next->prev = n_node;
+
+		//<! O proximo do current é o novo
+		current->next = n_node;
+		//<! Avança
+		current = current->next;
+	}
 }
 
-//<! Retorna o valor constante do primeiro nó
-template <typename T>
-const T & ls::list<T>::front( ) const
-{
-	auto aux = m_head->next;
-	return aux->data;
+/*! Destrutor. */
+template<typename T>
+ls::List<T>::~List( ){
+	clear();
+	delete m_head; //<! Remove nó cabeça
+	delete m_tail; //<! Remove nó calda
 }
 
-//<! Retorna o valor do último nó da lista
+/*! Constroi a lista com os elementos do intervalo [first, last). */
 template <typename T>
-T & ls::list<T>::back( )
+template< typename InputIt >
+ls::List<T>::List( InputIt first, InputIt last )
+: m_size( 0 )
+, m_head( new Node() )
+, m_tail( new Node() )
 {
-	auto aux = m_tail->prev;
-	return aux->data;
+	//<! Cria nova lista
+	m_head->next = m_tail;
+	m_tail->prev = m_head;
+
+	//<! Copia os elementos do intervalo para a nova lista
+	while(first != last){
+		push_back( *first++);
+	}
 }
 
-//<! Retorna o valor constante do último nó da lista
+/*! Construtor cópia. */
 template <typename T>
-const T & ls::list<T>::back( ) const
+ls::List<T>::List( const List & other )
+: m_size( 0 )
+, m_head( new Node() )
+, m_tail( new Node() )
 {
-	auto aux = m_tail->prev;
-	return aux->data;
+	m_head->next = m_tail;
+	m_tail->prev = m_head;
+
+	//<! Preenche a lista com o conteúdo de other
+	for( auto it( other.cbegin() ); it != other.cend(); ++it)
+		push_back(*it);
 }
 
-//<! Insere valor no inicio da lista
+/*! Construtor com conteúdo de initializer list. */
 template <typename T>
-void ls::list<T>::push_front
-( const T & value )
+ls::List<T>::List( std::initializer_list<T> ilist )
+: m_size( 0 )
+, m_head( new Node() )
+, m_tail( new Node() )
 {
-	insert(begin(), value);
+	m_head->next = m_tail;
+	m_tail->prev = m_head;
+
+	//<! Preenche a lista com o conteúdo de ilist
+	for( auto it( ilist.begin() ); it != ilist.end(); ++it)
+		push_back(*it);
 }
 
-//<! Insere valor no final da lista
+/*! Operador de atribuição por cópia. */
 template <typename T>
-void ls::list<T>::push_back
-( const T & value )
-{
+ls::List<T> & ls::List<T>::operator= ( const List & other ){
+	if (this == &other) return *this;
+
+	//<! Limpa a lista
+	clear();
+
+	//<! Preenche a lista com o conteúdo de other
+	for( auto it( other.cbegin() ); it != other.cend(); ++it)
+		push_back( *it);
+
+	return *this;
+}
+
+/*! Substitui o conteúdo da lista pelos elementos de ilist. */
+template <typename T>
+ls::List<T>& ls::List<T>::operator=( std::initializer_list<T> ilist ){
+	//<! Limpa a lista
+	clear();
+
+	//<! Preenche a lista com o conteúdo de ilist
+	for( auto it( ilist.begin() ); it != ilist.end(); ++it)
+		push_back(*it);
+
+	return *this;
+}
+
+///////////////////////////
+// [II] ITERADORES       //
+///////////////////////////
+
+/*! Retorna iterador que aponta para o começo da lista. */
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::begin( ){
+	return iterator(m_head->next);
+}
+
+/* Retorna iterador constante que aponta para o começo da lista.*/
+template <typename T>
+typename ls::List<T>::const_iterator ls::List<T>::cbegin( ) const{
+	return ls::List<T>::const_iterator(m_head->next);
+}
+
+/*! Retorna iterador que aponta para o final da lista.*/
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::end( ) {
+	return ls::List<T>::iterator(m_tail);
+}
+
+/* Retorna iterador constante que aponta para o final da lista.*/
+template <typename T>
+typename ls::List<T>::const_iterator ls::List<T>::cend( ) const{
+	return ls::List<T>::const_iterator(m_tail);
+}
+
+///////////////////////////
+// [III] CAPACIDADE      //
+///////////////////////////
+
+/*! Retorna número de elementos da lista. */
+template <typename T>
+std::size_t ls::List<T>::size( ) const{
+	return m_size;
+}
+
+/*! Verifica se a lista não tem elementos. */
+template <typename T>
+bool ls::List<T>::empty( ) const{
+	return (m_head->next == m_tail and m_tail->prev == m_head);
+}
+
+///////////////////////////
+// [IV] CONSULTA         //
+///////////////////////////
+
+/*! Retorna uma referência para o primeiro elemento da lista.*/
+template <typename T>
+T & ls::List<T>::front( ){
+	if(empty())
+		throw std::out_of_range("[front()] Cannot recover element from an empty list.");
+
+	return m_head->next->data;
+}
+
+/*! Retorna uma refrência constante para o primeiro elemento da lista.*/
+template <typename T>
+const T & ls::List<T>::front( ) const{
+	if(empty())
+		throw std::out_of_range("[front()] Cannot recover element from an empty list.");
+
+	return m_head->next->data;
+}
+
+/*! Retorna uma referência para o último elemento da lista. */
+template <typename T>
+T & ls::List<T>::back( ){
+	if(empty())
+		throw std::out_of_range("[back()] Cannot recover element from an empty list.");
+
+	return m_tail->prev->data;
+}
+
+/*! Retorna uma referência constante para o último elemento da lista. */
+template <typename T>
+const T & ls::List<T>::back( ) const{
+	if(empty())
+		throw std::out_of_range("[back()] Cannot recover element from an empty list.");
+
+	return m_tail->prev->data;
+}
+
+///////////////////////////
+// [V] MODIFICADORES     //
+///////////////////////////
+
+/*! Limpa lista. */
+template <typename T>
+void ls::List<T>::clear( ){	
+	//<! Percorre a lista e remove elementos
+	auto it( begin() );
+	while( it++ != end() ){
+		erase( ls::List<T>::iterator(it.m_ptr->prev) );	
+	}
+}
+
+/*! Insere elemento no começo da lista.*/
+template <typename T>
+void ls::List<T>::push_front( const T & value ){
+
+	//<! Cria novo nó 
+	Node * n_node = new Node(value, m_head, m_head->next);
+
+	//<! Insere nó na lista
+	m_head->next->prev = n_node;
+	m_head->next = n_node;
+
+	//<! Atualiza tamanho
+	m_size++;
+}
+
+/*! Insere elemento no final da lista.*/
+template <typename T>
+void ls::List<T>::push_back( const T & value ){
+	//<! Basta inserir valor antes do end()
 	insert(end(), value);
 }
 
-//<! Remove valor do inicio da lista
+/*! Remove o elemento no início da lista.*/
 template <typename T>
-void ls::list<T>::pop_front( )
-{
-	erase(cbegin());
+void ls::List<T>::pop_front( ){
+	if(empty())
+		throw std::out_of_range("[pop_front()] Cannot remove element from an empty list.");
+
+	erase(begin());
 }
 
-//<! Remove valor do final da lista
+/*! Remove o elemento no final da lista.*/
 template <typename T>
-void ls::list<T>::pop_back( )
-{
-	auto it = end();
-	erase(--it);
+void ls::List<T>::pop_back( ){
+	if(empty())
+		throw std::out_of_range("[pop_back()] Cannot remove element from an empty list.");
+
+	erase(  ls::List<T>::iterator(m_tail->prev)  );
 }
 
-//<! Atribui um valor para a lista toda
+/*! \brief Substitui o conteúdo da lista por cópias do valor 'value'. */
 template <typename T>
-void ls::list<T>::assign(const T& value )
-{
-	auto current = m_head;
-	while ( current->next != m_tail )
-	{
-		current = current->next;
-		current->data = value;
-	}
+void ls::List<T>::assign(const T& value ){
+	//<! Substitui todos os valores da lista por value
+	for( auto it( begin() ); it != end(); it++)
+		*it = value;
 }
 
-//<! Atribui valores do intervalo a uma lista
+/*! Substitui o conteúdo da lista por cópias dos elementes no intervalo [first,last). */
 template <typename T>
-template <class InItr>
-void ls::list<T>::assign( InItr first, InItr last )
-{
-	auto current = m_head;
-	auto fixed = first;
+template <class InItr >
+void ls::List<T>::assign( InItr first, InItr last ){
+	//<! Limpa a lista
+	clear();
 
-	while ( current->next != m_tail )
-	{
-		if ( first == last ) first = fixed;
-		current = current->next;
-		current->data = *first; 
-
-		first++;
-	}
+	//<! Substitui pelo conteudo de ilist
+	while(first != last)
+		push_back( *first++);
 }
 
-//<! Atribui valores de uma lista fornecida para a lista
+/*! Substitui o conteúdo da lista pelos elementos de ilist. */
 template <typename T>
-void ls::list<T>::assign( std::initializer_list<T> ilist )
-{
-	auto current = m_head;
-	auto fixed = ilist.begin();
-	auto _nfixed = ilist.begin();
+void ls::List<T>::assign( std::initializer_list<T> ilist ){
+	//<! Limpa a lista
+	clear();
 
-	while ( current->next != m_tail )
-	{
-		if ( _nfixed == ilist.end() ) _nfixed = fixed;
-		current = current->next;
-		current->data = *_nfixed;
-
-		_nfixed++;
-
-	}
+	//<! Substitui pelo conteudo de ilist
+	for(const auto &e : ilist)
+		push_back( e);
 }
 
-//<! Insere valor uma posição antes do iterador 
+/*! Adiciona valor value antes de pos.*/
 template <typename T>
-typename ls::list<T>::iterator
-ls::list<T>::insert( const_iterator itr, const T & value )
-{
-	//<! atualiza tamanho
+typename ls::List<T>::iterator ls::List<T>::insert( const_iterator pos, const T & value ){
+	//<! Atualiza tamanho
 	m_size++;
-	//<! cria novo nó com o valor
-	auto new_node = new Node(value);
-	//<! next do novo nó igual a itr
-	new_node->next = itr.current;
-	//<! prev do novo nó recebe prev do itr
-	new_node->prev = (itr.current)->prev;
-	//<! anterior a itr aponta para novo nó
-	((itr.current)->prev)->next = new_node;
-	//<! itr aponta para novo nó
-	(itr.current)->prev = new_node;
 
-	return iterator(new_node);
+	//<! Cria novo nó
+	Node * n_node = new Node(value, pos.m_ptr->prev, pos.m_ptr);
+
+	//<! Insere novo nó
+	(pos.m_ptr->prev)->next = n_node;
+	pos.m_ptr->prev = n_node;
+
+	return ls::List<T>::iterator(n_node);
 }
 
-//<! Insere valores de uma lista, uma posição antes da fornecida
-template <typename T>
-typename ls::list<T>::iterator ls::list<T>::insert
-( const_iterator pos, std::initializer_list<T> ilist )
-{
-	for (auto i = ilist.begin(); i != ilist.end(); ++i )
-	{
-		insert(pos, *i );
+/*! Insere os elementos do intervalo [first; last) antes de pos. */
+template < typename T>
+template < typename InItr>
+typename ls::List<T>::iterator ls::List<T>::insert( iterator pos, InItr first, InItr last ){
+	//<! Percorre o intervalo e insere cada elemento na lista
+	while( first != last){
+		insert(pos, *first++);
 	}
-
-	return iterator(pos.current);
-	
-
-}
-
-//<! Apaga um nó
-template <typename T>
-typename ls::list<T>::iterator
-ls::list<T>::erase( const_iterator itr )
-{
-	if (itr.current != m_tail)
-	{
-		auto before( (itr.current)->prev ); //anterior ao removido
-		auto after( (itr.current)->next ); //posterior ao rmeovido
 		
-		//Avança para poder excluir o no
-		before->next = after;
-		after->prev = before;
-		m_size--;
-
-		delete itr.current;	
-		return iterator( (itr.current)->next);
-	}
-
-	return iterator( itr.current );
-	
+	return pos;
 }
 
-//<! Apaga um intervalo da lista
+/*! Insere elementos de std::initializer_list antes de pos. */
 template <typename T>
-typename ls::list<T>::iterator
-ls::list<T>::erase( iterator first, iterator last )
-{
+typename ls::List<T>::iterator ls::List<T>::insert( const_iterator pos, std::initializer_list<T> ilist ){
+	//<! Insere cada elemento de ilist antes de pos
+	for(const auto &e : ilist)
+		insert(pos, e);
 
-	if ( empty() ) return ( first.current);
-	while ( first != last )
-	{
+	return ls::List<T>::iterator(pos.m_ptr);
+}
+
+/*! Remove o elemento na posição pos.*/
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::erase( const_iterator pos ){
+	if(empty())
+		throw std::out_of_range("[erase()] Cannot remove element from an empty list.");
+
+	auto after(pos.m_ptr->next );
+
+	//<! Seguinte aponta para o anterior a pos
+	after->prev = pos.m_ptr->prev;
+
+	//<! Anterior aponta para o que segue pos
+	pos.m_ptr->prev->next = after;
+
+	//<! Remove elemento apontado por pos
+	delete pos.m_ptr;
+
+	//<! Atualiza tamanho
+	m_size--;
+
+	return ls::List<T>::iterator(after);
+}
+
+/*! Remove os elementos no intervalo [first, last). */
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::erase( iterator first, iterator last ){
+	if(empty())
+		throw std::out_of_range("[erase()] Cannot remove element from an empty list.");
+
+	//<! Remove elementos do intervalo
+	while( first != last){
 		first++;
-		erase( first.current->prev);
+		erase( first.m_ptr->prev);
 	}
 
 	return last;
 }
 
-//<! Procura elementos na lista
+///////////////////////////
+//  [VI] OPERADORES      //
+///////////////////////////
+
+/*! Checa se os conteúdos de lhs e rhs são iguais.*/
 template <typename T>
-typename ls::list<T>::const_iterator 
-ls::list<T>::find( const T & value ) const
-{
-	auto curr = m_head;
-	while ( curr->next != m_tail )
-	{
-		curr = curr->next;
-		if( curr->data == value )
-			return const_iterator( curr );
+bool operator==( const ls::List<T>& lhs, const ls::List<T>& rhs ){
+	//<! Checa o número de elementos
+	if( lhs.size() != rhs.size() ) return false;
+	else{
+		//<! Verifica se todos os elementos são iguais
+		auto it(lhs.cbegin() );
+		auto it2(rhs.cbegin() );
+		for (  /*empty*/; it != lhs.cend(); ++it, ++it2)
+			if( *it != *it2 ) return false;
 	}
 
-	return const_iterator( m_tail );
+	return true;
 }
 
+/*! Verifica se os conteúdos de lhs e rhs são iguais.*/
+template <typename T>
+bool operator!=( const ls::List<T>& lhs, const ls::List<T>& rhs ){
+	//<! Checa o número de elementos
+	if( lhs.size() != rhs.size() ) return true;
+	else{
+		//<! Verifica se há algum elemento diferente
+		auto it(lhs.cbegin() );
+		auto it2(rhs.cbegin() );
+		for (  /*empty*/; it != lhs.cend(); ++it, ++it2)
+			if( *it != *it2 ) return true;
+	}
 
+	return false;
+}
+///////////////////////////
+// CLASSE CONST_ITERATOR //
+///////////////////////////
+/*! Construtor padrão para classe const_iterator. */
+template <typename T>
+ls::List<T>::const_iterator::const_iterator( Node *p)
+:m_ptr(p)
+{/*empty*/}
 
+/*! Retorna uma referência para o objeto lozalizado na posição apontada pelo iterador.*/
+template <typename T>
+const T & ls::List<T>::const_iterator::operator*( ) const{
+	assert(m_ptr != nullptr);
+	return m_ptr->data;
+}
+
+/*! Avança iterador para a próxima posição na lista. (++it)*/
+template <typename T>
+typename ls::List<T>::const_iterator & ls::List<T>::const_iterator::operator++( ){
+	m_ptr = m_ptr->next;
+	return *this;
+}
+
+/*! Avança iterador para a próxima posição na lista. (it++).*/
+template <typename T>
+typename ls::List<T>::const_iterator ls::List<T>::const_iterator::operator++( int ){
+	auto temp = *this;
+	m_ptr = m_ptr->next;
+	return temp;
+}
+
+/*! Move iterador para a posição anterior na lista. (--it). */
+template <typename T>
+typename ls::List<T>::const_iterator & ls::List<T>::const_iterator::operator--( ){
+	m_ptr = m_ptr->prev;
+	return *this;
+}
+
+/*! Move iterador para a posição anterior na lista. (it--). */
+template <typename T>
+typename ls::List<T>::const_iterator ls::List<T>::const_iterator::operator--( int ){
+	auto temp = *this;
+	m_ptr = m_ptr->prev;
+	return temp;
+} 
+
+/*! Retorna verdadeiro se os iteradores fazem referência para o mesmo ponto da lista.*/    
+template <typename T>        
+bool ls::List<T>::const_iterator::operator==( const const_iterator & rhs ) const{
+	return (m_ptr == rhs.m_ptr);
+}
+
+/*! Retorna verdadeiro se os iteradores fazem referência para pontos diferentes da lista.*/
+template <typename T>
+bool ls::List<T>::const_iterator::operator!=( const const_iterator & rhs ) const{
+	return (m_ptr != rhs.m_ptr);
+}
+
+/*! Avança iterador step vezes.*/
+template <typename T>
+typename ls::List<T>::const_iterator ls::List<T>::const_iterator::operator+=( difference_type step ){
+	//<! Avança o iterador
+	while(step > 0){
+		m_ptr = m_ptr->next;  
+		step--;
+	}
+	return *this;
+}
+
+/*! Move iterador step vezes para trás.*/
+template <typename T>
+typename ls::List<T>::const_iterator ls::List<T>::const_iterator::operator-=( difference_type step ){
+	//<! Volta com o iterador
+	while(step > 0){
+		m_ptr = m_ptr->prev;  
+		step--;
+	}
+	return *this;
+}
+
+///////////////////////////
+// CLASSE ITERATOR       //
+///////////////////////////
+/*! Construtor padrão para classe const_iterator. */
+template <typename T>
+ls::List<T>::iterator::iterator( Node * p )
+: const_iterator(p) 
+{ /* Empty */ }
+
+/*! Retorna uma referência para o objeto lozalizado na posição apontada pelo iterador.*/
+template <typename T>
+T & ls::List<T>::iterator::operator*( ){
+	return const_iterator::m_ptr->data;
+}
+
+/*! Avança iterador para a próxima posição na lista. (++it) */
+template <typename T>
+typename ls::List<T>::iterator & ls::List<T>::iterator::operator++( ){
+	const_iterator::m_ptr = const_iterator::m_ptr->next;
+	return *this;
+}
+
+/*! Move iterador para a posição anterior na lista. (--it) */
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::iterator::operator++( int ){
+	auto temp = *this;
+	const_iterator::m_ptr = const_iterator::m_ptr->next;
+	return temp;
+}
+
+/*! Move iterador para a posição anterior na lista. (--it) */
+template <typename T>
+typename ls::List<T>::iterator & ls::List<T>::iterator::operator--( ){
+	const_iterator::m_ptr = const_iterator::m_ptr->prev;
+	return *this;
+}
+
+/*! Move iterador para a posição anterior na lista. (it--) */
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::iterator::operator--( int ){
+	auto temp = *this;
+	const_iterator::m_ptr = const_iterator::m_ptr->prev;
+	return temp;
+}
+
+/*! Avança iterador step vezes.*/
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::iterator::operator+=( typename const_iterator::difference_type step ){
+	//<! Avança o iterador
+	while(step > 0){
+		const_iterator::m_ptr = const_iterator::m_ptr->next;  
+		step--;
+	}
+	return *this;
+}
+
+/*! Move iterador step vezes para trás.*/
+template <typename T>
+typename ls::List<T>::iterator ls::List<T>::iterator::operator-=( typename const_iterator::difference_type step ){
+	//<! Avança o iterador
+	while(step > 0){
+		const_iterator::m_ptr = const_iterator::m_ptr->prev;  
+		step--;
+	}
+	return *this;
+}

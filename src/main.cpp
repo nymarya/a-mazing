@@ -24,14 +24,15 @@ int main(int argc, char** argv){
 
 	game.initialize( argv[1]);
 	game.render();
+	
 
-	 while( not game.game_over() ){
+	 while( not game.game_over()){
 	 	game.process_events();
 		game.update();
 	 	game.render();
 	 }
 
-
+	 std::cout << "\nTHE END\n";
 
 	return EXIT_SUCCESS;
 }

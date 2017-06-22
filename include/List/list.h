@@ -1,538 +1,332 @@
-/**
- * @file list.h
- * @author Gabriel Araújo de Souza
- * @date 02 Jun 2017
- * @brief Arquivo contendo as definições das classes list
- *        iterator e const_iterator.
- */
-
 #ifndef _LIST_H_
 #define _LIST_H_
 
-#include <iostream>  //<! cout, endl
-#include <iterator>  //<! begin(), end()
-#include <cassert>   //<! assert()
-#include <algorithm> //<! copy
+#include <iostream>
 
-/**
- * Namespace para as classes definidas
- */
-namespace ls {
+namespace ls{
+    
+    template <typename T>
+    class List {
+        private:
+            struct Node {
+                T data;      //<! Valor armazenado no nó
+                Node * prev; //<! Ponteiro para o nó anterior
+                Node * next; //<! Ponteiro para o pŕóximo nó
 
-	/**
-	 * @brief      Classe list.
-	 *
-	 * @tparam     T     Tipo de variável genérica.
-	 */
-	template <typename T>
-	class list {
+                /*! \brief Construtor simples para o nó. */
+                Node( const T & d = T( ), Node * p = nullptr, Node * n = nullptr )
+                : data( d ), prev(p), next( n ) { /* Empty */ }
+            };
 
-	private:
+            std::size_t m_size; //<! Tamanho da lista
+            Node *m_head;       //<! Cabeça da lista
+            Node *m_tail;       //<! Calda da lista
 
-		/**
-		 * @brief      Definição de um nó para um lista duplamente
-		 *             encadeada.
-		 */
-		struct Node {
-		
-			T data; 	//<! Campo dados.
-			Node *prev; //<! Ponteiro para o nó anterior ao atual.
-			Node *next; //<! Ponteiro para o próximo nó da lista.
-			
-			//<! Construtor básico
-			Node( const T & d = T( ), Node * p = nullptr, Node * n = nullptr )
-				: data( d ), prev(p), next( n ) { /* Empty */ }
-		};
+        public:
 
-	private:
+            using size_type = std::size_t;
 
-		int m_size;   //<! Quantidade de nós da lista.
-		Node *m_head; //<! Nó para o início da lista.
-		Node *m_tail; //<! Nó para o final da lista.
+            ///////////////////////////
+            // [I] MEMBROS ESPECIAIS //
+            ///////////////////////////
 
-	public:
+            /*! \brief Classe aninhada const_iterator.*/
+            class const_iterator;
 
-		class const_iterator; //<! classe do iterador constante
-		class iterator; //<! classe do iterador
+            /*! \brief Classe aninhada iterator. */
+            class iterator;
 
-		/**
-		 * @brief      Construtor simples de uma lista.
-		 *
-		 * @param[in]  sz    O tamanho da lista.
-		 */
-		list( size_t sz = 0 )
-			: m_size( sz )
-			, m_head( new Node() )
-			, m_tail( new Node() )
-		{ 
-			m_head->next = m_tail;
-			m_tail->prev = m_head;
-		}
+            /*! \brief Construtor padrão. */
+            List( );
 
-		/**
-		 * @brief      Construtor de um lista cópia de valores
-		 *             em um intervalo fechado-aberto.
-		 *
-		 * @param[in]  first    Inicio do instervalo (fechado).
-		 * @param[in]  last     Fim do intervalo (aberto).
-		 *
-		 * @tparam     Tipo do intervalo.
-		 */
-		template< typename InputIt >
-		list( InputIt first, InputIt last )
-		{
-			//<! cria lista
-			m_size = 0;
-			m_head = new Node;
-			m_tail = new Node;
-			m_head->next = m_tail;
-			m_tail->prev = m_head;
+            /*! \brief Constrói a lista com count cópias de T. 
+             *  \param count Números de instâncias de T.
+             */
+            explicit List( size_type count );
 
-			//<! copia conteúdo
-			for ( /*empty*/; first != last; ++first )
-				push_back(*first);
+            /*! \brief Destrutor. */
+            ~List( );
 
-		}
-
-		/**
-		 * @brief      Construtor cópia.
-		 *
-		 * @param[in]  other  A lista para copiar.
-		 */
-		list( const list & other)
-		{
-			//<! cria lista
-			m_size = 0;
-			m_head = new Node;
-			m_tail = new Node;
-			m_head->next = m_tail;
-			m_tail->prev = m_head;
-
-			//<! copia conteúdo
-			for( auto i(other.cbegin()); i != other.cend(); ++i)
-	 	    	push_back(*i);
-		}
-
-		/**
-		 * @brief      Construtor cópia de uma lista.
-		 *
-		 * @param[in]  ilist  A lista para copiar o conteúdo.
-		 */
-		list( std::initializer_list<T> ilist )
-		{
-			//<! cria lista
-			m_size = 0;
-			m_head = new Node;
-			m_tail = new Node;
-			m_head->next = m_tail;
-			m_tail->prev = m_head;
-
-			//<! copia conteúdo
-			for ( auto i = ilist.begin(); i != ilist.end(); ++i )
-				push_back(*i);
-
-		}
-
-		/**
-		 * @brief      Construtor cópia com lógica de movimento.
-		 *
-		 * @param[in]  <unnamed>  Lista referência.
-		 */
-		list( list && other)
-		{
-			// "movimentar" dados de other
-			m_size = other.m_size;
-			m_head = new Node;
-		    m_tail = other.m_tail;
-		    m_head->next = other.m_head->next;
-		    
-		    // mudar other
-		    other.m_tail = new Node;
-		    other.m_head->next = other.m_tail;
-		    other.m_tail->prev = other.m_head;
-		    other.m_size = 0;
-		}
-
-		/**
-		 * @brief      Destroi o objeto.
-		 */
-		~list( )
-		{
-			clear(); //Apaga os outros nós da lista
-	        delete m_head;
-	        delete m_tail;
-		}		
-		
-		/**
-		 * @brief      Sobrecarga do operador '=' para copiar dados
-		 *             de uma lista para outra.
-		 *
-		 * @param[in]  copy  A cópia.
-		 *
-		 * @return     A lista com os novos valores copiados.
-		 */
-		list & operator= ( const list & copy )
-		{	
-			//<! cria nova lista 
-			m_size = 0;
-			m_head = new Node;
-			m_tail = new Node;
-			m_head->next = m_tail;
-			m_tail->prev = m_head;
-
-			//<! copia o conteúdo
-			for ( auto i = copy.cbegin(); i != copy.cend(); ++i )
-				push_back(*i);
-
-			return *this;
-		}
-		
-		/**
-		 * @brief      Sobrecarga do operador '=' para copiar dados
-		 *             de uma lista fornecida.
-		 *
-		 * @param[in]  ilist  A lista.
-		 *
-		 * @return     A lista com os novos valores atribuidos.
-		 */
-		list& operator=( std::initializer_list<T> ilist )
-		{
-			//<! cria nova lista
-			m_size = 0;
-			m_head = new Node;
-			m_tail = new Node;
-			m_head->next = m_tail;
-			m_tail->prev = m_head;
-
-			//<! copia conteúdo
-			for ( auto i = ilist.begin(); i < ilist.end(); ++i)
-				push_back(*i);
-
-			return *this;
-		}
-		
-		/**
-		 * @brief      Localiza o primeiro item da lista.
-		 *
-		 * @return     Retorna um iterador para o primeiro item da lista.
-		 */
-		iterator begin( );
-
-		/**
-		 * @brief      Localiza o primeiro item da lista.
-		 *
-		 * @return     Retorna um iterador constante para o primeiro item da lista.
-		 */
-		const_iterator cbegin( ) const;
-
-		/**
-		 * @brief      Localiza o nó após o último item válido da lista.
-		 *
-		 * @return     Retorna um iterador para a posição logo após o último 
-		 *             item válido da lista.
-		 */
-		iterator end( );
-
-		/**
-		 * @brief      Localiza o nó após o último item válido da lista.
-		 *
-		 * @return     Retorna um iterador constante para a posição logo após.
-		 *             o último item válido da lista.
-		 */
-		const_iterator cend( ) const;
-
-		/**
-		 * @brief      Informa o atual tamanho da lista.
-		 *
-		 * @return     Um inteiro com a quantidade de elementos da lista.
-		 */
-		int size( ) const;
-		
-		/**
-		 * @brief      Verifica se a lista está vazia.
-		 *
-		 * @return     True caso a lista esteja vazia, False caso contrário.
-		 */
-		bool empty( ) const;
-		
-		/**
-		 * @brief      Limpa os dados da lista.
-		 */
-		void clear( );
-		
-		/**
-		 * @brief      Verifica o valor armazenado no primeiro nó da lista.
-		 *
-		 * @return     O valor no primeiro nó da lista.
-		 */
-		T & front( );
-		
-		/**
-		 * @brief      Verifica o valor armazenado no primeiro nó da lista.
-		 *
-		 * @return     O valor constante do primeiro nó da lista.
-		 */
-		const T & front( ) const;
-		
-		/**
-		 * @brief      Verifica o valor armazenado no último nó da lista.
-		 *
-		 * @return     O valor no último nó da lista.
-		 */
-		T & back( );
-		
-		/**
-		 * @brief      Verifica o valor armazenado no último nó da lista.
-		 *
-		 * @return     O valor constante do último nó da lista.
-		 */
-		const T & back( ) const;
-		
-		/**
-		 * @brief      Insere um valor no inicio da lista.
-		 *
-		 * @param[in]  value  O valor.
-		 */
-		void push_front( const T & value );
-		
-		/**
-		 * @brief      Insere um valor ńo final da lista.
-		 *
-		 * @param[in]  value  O valor.
-		 */
-		void push_back( const T & value );
-		
-		/**
-		 * @brief      Remove o primeiro nó da lista.
-		 */
-		void pop_front( );
-		
-		/**
-		 * @brief      Remove o último nó da lista.
-		 */
-		void pop_back( );
-
-		/**
-		 * @brief      Atribui um valor para todos os nós da lista.
-		 *
-		 * @param[in]  value  O valor.
-		 */
-		void assign(const T& value );
-
-		/**
-		 * @brief      Atribui valores de um intervalo fechado-aberto
-		 *             para todos os nós da lista ( em ordem ).
-		 *
-		 * @param[in]  first  Início do intervalo.
-		 * @param[in]  last   Fim do intervalo.
-		 *
-		 * @tparam     InItr  Tipo do intervalo.
-		 */
-		template < class InItr >
-		void assign( InItr first, InItr last );
-		
-		/**
-		 * @brief      Atribui valores de uma lista fornecida para 
-		 *             todos os nós da lista ( em ordem ).
-		 *
-		 * @param[in]  ilist  A lista.
-		 */
-		void assign( std::initializer_list<T> ilist );
-		
-		/**
-		 * @brief      Insere um valor na posição anterior de um iterador
-		 *             fornecido.
-		 *
-		 * @param[in]  itr    O iterador.
-		 * @param[in]  value  O valor.
-		 *
-		 * @return     O iterador para a posição do valor inserido.
-		 */
-		iterator insert( const_iterator itr, const T & value );
-		
-		/**
-		 * @brief      Insere os valores de uma lista fornecida, na posição
-		 *             anterior do iterador fornecido.
-		 *
-		 * @param[in]  pos    A posição.
-		 * @param[in]  ilist  A lista.
-		 *
-		 * @return     Um iterador para o último elemento inserido.
-		 */
-		iterator insert( const_iterator pos, std::initializer_list<T> ilist );
-		
-		/**
-		 * @brief      Apaga o nó do iterador fornecido.
-		 *
-		 * @param[in]  itr   O iterador.
-		 *
-		 * @return     Um iterador para o nó após o removido.
-		 */
-		iterator erase( const_iterator itr );
-		
-		/**
-		 * @brief      Remove um intervalo fechado-aberto da lista.
-		 *
-		 * @param[in]  first  O início do intervalo.
-		 * @param[in]  last   O fim do intervalo.
-		 *
-		 * @return     iterador para o nó após o último removido.
-		 */
-		iterator erase( iterator first, iterator last );
-		
-		/**
-		 * @brief      Procura por um valor na lista.
-		 *
-		 * @param[in]  value  O valor.
-		 *
-		 * @return     Um iterador constante para o primeiro nó encontrado
-		 *             com o valor.
-		 */
-		const_iterator find( const T & value ) const;
-
-	};
-
-	/**
-	 * @brief      Classe const_iterator para a classe list.
-	 *
-	 * @tparam     T     Tipo dos dados.
-	 */
-	template <typename T>
-	class list<T>::const_iterator {
-
-		protected:
-			Node *current;
-		 	const_iterator( Node * p ) : current( p ) {}
-		 	friend class list<T>;
-
-		public:
-			/**
-			 * @brief      Construtor básico.
+            /*! \brief Constroi a lista com os elementos do intervalo [first, last).
+			 *  \param first Iterador que aponta para o início da lista a ser copiada.
+			 *  \param last Iterador que aponta para o final da lista a ser copiada.
 			 */
-		 	const_iterator( ){ /*empty*/ }
+            template< typename InputIt >
+            List( InputIt first, InputIt last );
 
-		 	/**
-		 	 * @brief      Operador '*'.
-		 	 *
-		 	 * @return     O valor do nó apontado apontado pelo iterador.
-		 	 */
-		 	const T & operator* ( ) const;
-
-		 	/**
-		 	 * @brief      Operador '++', equivalente à ++it. 
-		 	 *
-		 	 * @return     Iterador para o próximo nó.
-		 	 */
-		 	const_iterator & operator++ ( );
-		 	
-		 	/**
-		 	 * @brief      Operador '++', equivalente à it++. 
-		 	 *
-		 	 * @return     Iterador para o próximo nó.
-		 	 */
-		 	const_iterator operator++ ( int );
-
-		 	/**
-		 	 * @brief      Operador '--', equivalente à --it. 
-		 	 *
-		 	 * @return     Iterador para a posição anterior.
-		 	 */
-		 	const_iterator & operator-- ( );
-
-		 	/**
-		 	 * @brief      Operador '--', equivalente à it--. 
-		 	 *
-		 	 * @return     Iterador para a posição anterior.
-		 	 */
-		 	const_iterator operator-- ( int );
-
-		 	/**
-		 	 * @brief      Verifica se dois iteradores são iguais.
-		 	 *
-		 	 * @param[in]  rhs  Iterador para se comparar.
-		 	 *
-		 	 * @return     True se iguais, False caso constrário.
-		 	 */
-		 	bool operator== ( const const_iterator & rhs ) const;
-
-		 	/**
-		 	 * @brief      Verifica se dois iteradores são diferentes.
-		 	 *
-		 	 * @param[in]  rhs  Iterador para se comparar.
-		 	 *
-		 	 * @return     True se iguais, False caso constrário.
-		 	 */
-		 	bool operator!= ( const const_iterator & rhs ) const;
-		
-	};
-
-	/**
-	 * @brief      Classe iterator para o list.
-	 *
-	 * @tparam     T     Tipo do iterador.
-	 */
-	template <typename T>
-	class list<T>::iterator : public list<T>::const_iterator {
-
-		protected:
-			iterator( Node *p ) : const_iterator( p ){}
-			friend class list<T>;
-
-		public:
-
-			/**
-			 * @brief      Construtor básico.
+            /*! \brief Construtor cópia
+			 *  \param other Lista a ser copiado.
 			 */
-			iterator( ) : const_iterator() { /* Empty */ }
-			
-			/**
-			 * @brief      Operador '*'.
-			 *
-			 * @return     O valor constante armazenado no nó apontado
+            List( const List & other );
+
+            /*! \brief Construtor com conteúdo de initializer list.
+			 *  \param init Initializer list cujo conteúdo preenche a lista.
 			 */
-			const T & operator* ( ) const;
+            List( std::initializer_list<T> ilist );
 
-			/**
-			 * @brief      Operador '*'.
-			 *
-			 * @return     O valor armazenado no nó apontado.
+            /*! \brief Operador de atribuição por cópia.
+			 *  \param other Lista a ser copiada.
+			 *  \return O novo objeto.
 			 */
-			T & operator* ( );
+            List & operator= ( const List & );
 
-			/**
-			 * @brief      Operador '++', equivalente a ++it.
-			 *
-			 * @return     O iterado para o próximo nó.
+            /*! \brief Substitui o conteúdo da lista pelos elementos de ilist.
+			 *  \param ilist Initializer list cujo conteúdo irá preencher a lista.
+			 *  \return O novo objeto.
 			 */
-			iterator & operator++ ( );
+            List& operator=( std::initializer_list<T> ilist );
 
-			/**
-			 * @brief      Operador '++', equivalente a it++.
-			 *
-			 * @return     O iterado para o próximo nó.
+            ///////////////////////////
+            // [II] ITERADORES       //
+            ///////////////////////////
+
+            /*! \brief Retorna iterador que aponta para o começo da lista.
+             *  \return Iterador que aponta para o começo da lista.
+             */
+            iterator begin( );
+
+            /* \brief Retorna iterador constante que aponta para o começo da lista.
+             * \return Iterador que aponta para o começo da lista.
+             */
+            const_iterator cbegin( ) const;
+
+            /*! \brief Retorna iterador que aponta para o final da lista.
+             *  \return Iterador que aponta para o final da lista.
+             */
+            iterator end( );
+
+            /* \brief Retorna iterador constante que aponta para o final da lista.
+             * \return Iterador que aponta para o final da lista.
+             */
+            const_iterator cend( ) const;
+
+            ///////////////////////////
+            // [III] CAPACIDADE      //
+            ///////////////////////////
+
+            /*! \brief Retorna número de elementos da lista.
+             *  \return Tamanho lógico da lista.
+             */
+            size_type size( ) const;
+
+            /*! \brief Verifica se a lista não tem elementos.
+             *  \return Verdadeiro se a lista está vazia, falso caso contrário.
+             */
+            bool empty( ) const;
+
+            ///////////////////////////
+            // [IV] CONSULTA         //
+            ///////////////////////////
+
+            /*! \brief Retorna uma referência para o primeiro elemento da lista.
+             *  \return Valor do primeiro elemento da lista.
+             */
+            T & front( );
+
+            /*! \brief Retorna uma refrência constante para o primeiro elemento da lista.
+             *  \return Valor do primeiro elemento da lista.
+             */
+            const T & front( ) const;
+
+            /*! \brief Retorna uma referência para o último elemento da lista.
+			 *  \return Valor do último elemento da lista.
 			 */
-			iterator operator++ ( int );
+            T & back( );
 
-			/**
-			 * @brief      Operador '--', equivalente a --it.
-			 *
-			 * @return     O iterado para o nó anterior.
+            /*! \brief Retorna uma referência constante para o último elemento da lista.
+			 *  \return Valor do último elemento da lista.
 			 */
-			iterator & operator--( );
+            const T & back( ) const;
 
-			/**
-			 * @brief      Operador '--', equivalente a it--.
-			 *
-			 * @return     O iterado para o nó anterior.
+            ///////////////////////////
+            // [V] MODIFICADORES     //
+            ///////////////////////////
+
+            /*! \brief Limpa lista. */
+            void clear( );
+
+            /*! \brief Insere elemento no começo da lista.
+             *  \param value Valor a ser inserido no final da lista.
+             */
+            void push_front( const T & value );
+
+            /*! \brief Insere elemento no final da lista.
+             *  \param value Valor a ser inserido no final da lista.
+             */
+            void push_back( const T & value );
+
+            /*! \brief Remove o elemento no início da lista.
 			 */
-			iterator operator--( int );
+            void pop_front( );
 
-	};
+            /*! \brief Remove o elemento no final da lista.
+			 */
+            void pop_back( );
 
-	/**
-	 * impletação do template.
-	 */
-	#include "list.inl"
-}
+            /*! \brief Substitui o conteúdo da lista por cópias do valor 'value'.
+			 *  \param value Valor que será atribuído à lista.
+			 */
+            void assign(const T& value );
 
+            /*! \brief Substitui o conteúdo da lista por cópias dos elementes no intervalo [first,last).
+			 *  \param first Iterador que aponta para o primeiro valor no intervalo que será copiado.
+			 *  \param last Iterador que aponta para a posição posterior ao último elemento do intervalo.
+			 */
+            template <class InItr >
+            void assign( InItr first, InItr last );
+
+            /*! \brief Substitui o conteúdo da lista pelos elementos de ilist.
+			 *  \param ilist Initializer list que será copiada para a lista.
+			 */
+            void assign( std::initializer_list<T> ilist );
+
+            /*! \brief Adiciona valor value antes de pos.
+             *  \param pos Iterador que aponta para a posição posterior aonde o valor será inserido.
+             *  \param value Valor a ser inserido.
+             *  \return Iterador que aponta para a posição do item inserido.
+             */
+            iterator insert( const_iterator pos, const T & value );
+
+            /*! \brief Insere os elementos do intervalo [first; last) antes de pos.
+			 *  \param pos Iterador que aponta para a posição posterior aonde o intervalo será inserido.
+			 *  \param first Iterador que aponta para a posição do primeiro valor que será inserido.
+			 *  \param last Iterador que aponta para a posição posterior ao ultimo valor que será inserido.
+			 *  \return Iterador que aponta para a posição seguinte ao último item inserido.
+			 */
+            template < typename InItr>
+            iterator insert( iterator pos, InItr first, InItr last );
+
+            /*! \brief Insere elementos de std::initializer_list antes de pos.
+			 *  \param pos Iterador que aponta para a posição posterior aonde a lista será inserido.
+			 *  \param ilist Lista que será inserida na lista.
+			 *  \return Iterador que aponta para a posição seguinte ao último item inserido.
+			 */
+            iterator insert( const_iterator pos, std::initializer_list<T> ilist );
+
+            /*! \brief Remove o elemento na posição pos.
+			 *  \param pos Iterador que aponta para o elemento a ser removido.
+			 *  \return Iterador para o elemento que segue pos antes de o método ser chamado.
+			 */
+            iterator erase( const_iterator pos );
+
+            /*! \brief Remove os elementos no intervalo [first, last).
+			 *  \param first Iterador que aponta para o primeiro elemento a ser removido.
+			 *  \param last Iterador que aponta para o elemento posterior ao último a ser removido.
+			 */
+            iterator erase( iterator first, iterator last );
+
+            const_iterator find( const T & value ) const;
+    
+    };
+
+    template <typename T>
+    class List<T>::const_iterator {
+        protected:
+            Node *m_ptr;
+            friend class List<T>;
+
+        public:
+            using difference_type = std::ptrdiff_t;
+
+            /*! \brief Construtor padrão para classe const_iterator. */
+            const_iterator( Node *p);
+
+            /*! \brief Retorna uma referência para o objeto lozalizado na posição apontada pelo iterador.
+             *  \return O valor que o iterador aponta.
+             */
+            const T & operator*( ) const;
+
+            /*! \brief Avança iterador para a próxima posição na lista. (++it)
+             *  \return O iterador requerido.
+             */
+            const_iterator & operator++( );
+
+            /*! \brief Avança iterador para a próxima posição na lista. (it++)
+             *  \return O iterador requerido.
+             */
+            const_iterator operator++( int ); 
+
+            /*! \brief Move iterador para a posição anterior na lista. (--it)
+             *  \return O iterador requerido.
+             */
+            const_iterator & operator--( );
+           
+            /*! \brief Move iterador para a posição anterior na lista. (it--)
+             *  \return O iterador requerido.
+             */
+            const_iterator operator--( int ); 
+
+            /*! \brief Retorna verdadeiro se os iteradores fazem referência para o mesmo ponto da lista.
+             *  \return Verdadeiro se os iteradores são iguais, falso caso contrário.
+             */            
+            bool operator==( const const_iterator & rhs ) const;
+
+            /*! \brief Retorna verdadeiro se os iteradores fazem referência para pontos diferentes da lista.
+             *  \return Verdadeiro se os iteradores são diferentes, falso caso contrário.
+             */
+            bool operator!=( const const_iterator & rhs ) const;
+
+            /*! \brief Avança iterador step vezes.
+             *  \param step Vezes que o iterador irá avançar.
+             *  \return O iterador requerido.
+             */
+            const_iterator operator+=( difference_type step ) ;
+
+            /*! \brief Move iterador step vezes para trás.
+             *  \param step Vezes que o iterador irá mover-se.
+             *  \return O iterador requerido.
+             */
+            const_iterator operator-=( difference_type step ) ;
+    };
+
+    template <typename T>
+    class List<T>::iterator : public List<T>::const_iterator {
+        protected:
+            friend class List<T>;
+        
+        public:
+            /*! \brief Construtor padrão para classe iterator. */
+            iterator( Node * p );
+
+            /*! \brief Retorna uma referência para o objeto lozalizado na posição apontada pelo iterador.
+             *  \return O valor que o iterador aponta.
+             */
+            T & operator*( );
+
+            /*! \brief Avança iterador para a próxima posição na lista. (++it)
+             *  \return O iterador requerido.
+             */
+            iterator & operator++( );
+            
+            /*! \brief Move iterador para a posição anterior na lista. (--it)
+             *  \return O iterador requerido.
+             */
+            iterator operator++( int ); 
+
+            /*! \brief Move iterador para a posição anterior na lista. (--it)
+             *  \return O iterador requerido.
+             */
+            iterator & operator--( );
+            
+            /*! \brief Move iterador para a posição anterior na lista. (it--)
+             *  \return O iterador requerido.
+             */
+            iterator operator--( int );
+
+            /*! \brief Avança iterador step vezes.
+             *  \param step Vezes que o iterador irá avançar.
+             *  \return O iterador requerido.
+             */
+            iterator operator+=( typename const_iterator::difference_type step ) ;
+
+            /*! \brief Move iterador step vezes para trás.
+             *  \param step Vezes que o iterador irá mover-se.
+             *  \return O iterador requerido.
+             */
+            iterator operator-=( typename const_iterator::difference_type step ) ;
+    };
+} 
+
+
+#include "list.inl"
 #endif

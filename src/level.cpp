@@ -4,7 +4,7 @@
 
 Level::Level()
 {
-    ls::list<data> lvl;
+    std::list<data> lvl;
     levels = lvl;
     m_current_lvl = 1;
     m_total_lvl = 1;
@@ -148,11 +148,11 @@ void Level::generate_apple ()
 	Position apple;
 	while ( aux )
 	{
-		auto r = rand() % (*current_lvl).m_rolls;
-		auto c = rand() % (*current_lvl).m_cols;
+		auto r = rand() % ((*current_lvl).m_rolls -2 ) + 1;
+		auto c = rand() % ( (*current_lvl).m_cols -2 ) + 1;
 		apple.roll = r;
 		apple.col  = c;
-		aux = is_blocked( apple );
+		aux = is_blocked( apple ) or apple == m_apple_pos;
 	}
 
 	(*current_lvl).lvl[apple.roll][apple.col] = 'm';

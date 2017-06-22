@@ -1,5 +1,10 @@
 #include "snake.h"
 
+void Snake::bind_level( Level & l_ )
+{
+    lvl = &l_;
+}
+
 Position Snake::get_position( void) 
 {
     return body.front();
@@ -80,4 +85,19 @@ int Snake::get_lifes() const{
 
 void Snake::die(){
 	m_lifes--;
+}
+
+bool Snake::is_snake( const Position & pos )
+{
+    auto it = body.begin();
+    auto end = body.end();
+    auto res = std::find( it, end-1, pos);
+
+    if (res != end-1 and res != it) return true;
+    else return false;
+}
+
+void Snake::set_body(  std::deque < Position > & newBody )
+{
+    body = newBody;
 }

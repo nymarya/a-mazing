@@ -4,6 +4,8 @@
 #include <deque>
 #include "comum.h"
 #include "level.h"
+#include <algorithm>
+
 
 //=== Classe que controla o jogo
 class Snake {
@@ -30,7 +32,10 @@ class Snake {
         Snake(std::string h = "\u142F")
         : head( h )
         , state( SnakeState::RUN )
+        , m_lifes( 3 )
         {/*empty*/}
+
+        void bind_level( Level & l_ );
 
         /**
          * @brief      Retorna posição atual da cobra
@@ -81,6 +86,11 @@ class Snake {
          */
         Snake::SnakeState get_state( void ) const;
 
+        /**
+         * @brief      Pega o corpo da cobra
+         *
+         * @return     O corpo da cobra.
+         */
         std::deque < Position > get_body( ) const;
 
         /**
@@ -93,5 +103,14 @@ class Snake {
         int get_lifes() const;
 
         void die();
+
+        bool is_snake( const Position & pos );
+
+        void set_body(  std::deque < Position > & newBody );
+
+        void reset(){
+            body.clear();
+        }
+        
 };
 #endif
