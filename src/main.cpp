@@ -32,7 +32,7 @@ int main(int argc, char** argv){
 	 	game.render();
 	 }
 
-
+	 std::cout << "\nTHE END\n";
 
 	return EXIT_SUCCESS;
 }

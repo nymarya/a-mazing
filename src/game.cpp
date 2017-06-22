@@ -72,8 +72,6 @@ void Game::initialize (std::string filename){
     level.load( filename );
 
     //!< Gera maçã
-    //level.next_level();
-    //level.next_level();
     level.generate_apple();
 
     //!< Gera snake
@@ -107,13 +105,10 @@ void Game::process_events( void ){
         snake.grow( level.get_start_position() );
 
         level.generate_apple(); //!< Gera nova maçã
-        auto ap = level.get_apple();
-        std::cout << "maca " << ap.roll << " " << ap.col <<std::endl;
 
         player.bind_level( level );
-        auto map = level.get_level();
+        
         player.find_solution( level.get_start_position() ); //!< Busca a solução do novo nível
-        player.print();
     } 
     //Se não tem mais maçãs nem níveis, fim de jogo
     else if ( level.get_apples() == 0 and 
@@ -133,16 +128,11 @@ void Game::process_events( void ){
             snake.update_state( Snake::SnakeState::RUN );
 
             level.generate_apple(); //!< Gera nova maçã
-            auto ap = level.get_apple();
-            std::cout << "maca dps do crash " << ap.roll << " " << ap.col <<std::endl;
 
             player.bind_level( level );
 
-            auto res = player.find_solution( snake.get_body().front() );
-            player.print();
-
+            player.find_solution( snake.get_body().front() );
         } else {
-            std::cout << "morta feat enterrada\n";
             snake.update_state( Snake::SnakeState::DEAD );
         }
         // Caso contrario, cobra morre
@@ -166,7 +156,6 @@ void Game::update()
 
     if( dir == direction_t::NONE or (dir != direction_t::STATIC and level.is_blocked( new_pos  )) )
     {
-        std::cout << "tenta ir " << (int) dir << ": "<< new_pos.roll << " " << new_pos.col << std::endl;
         snake.update_state( Snake::SnakeState::CRASH );
     }
     //Se a nova posição for a mação, cresce
@@ -182,11 +171,7 @@ void Game::update()
             player.bind_level( level );
         }
         level.generate_apple();
-        auto ap = level.get_apple();
-        auto map = level.get_level();
         player.find_solution( snake.get_body().front() );
-        player.print();
-        
     } 
     else
     {
@@ -213,7 +198,8 @@ void Game::render()
             std::cout << "\u2661 ";
         }
     }
-    std::cout << std::right << std::setw(3) << level.get_apples() << " ";
+    std::cout << std::right << std::setw(3) << std::setfill(' ' ) << level.get_apples()<< " ";
+    std::cout << "remaining apples";
     std::cout <<"\n"<< std::setw(50) << std::setfill('-' ) << "" << std::endl << std::endl;
 
     auto map = level.get_level();
