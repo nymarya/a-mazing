@@ -26,9 +26,9 @@
 /**
  * @brief      Classe para o jogo
  */
-class Game{
-
-        //=== Membros privados
+class Game
+{
+    //=== Membros privados
     private:
         Level level; //!< Instancia da classe Level
         Snake snake;  //!< Instancia da classe Snake
@@ -36,16 +36,15 @@ class Game{
         unsigned int m_levels; //!< Número de levels
     
     public:
-
         static const int MIN_SIZE = 1;      //<! Menor valor para linha ou coluna
         static const int MAX_SIZE = 100;     //<! Maior valor para linha ou soluna
 
-        struct Result{
+        struct Result
+        {
             bool success;
             std::string message;
 
-            Result( bool s=true, std::string m="")
-            :success(s), message(m)
+            Result( bool s=true, std::string m="" ) : success(s), message(m)
             {/*empty*/}
         };
 
@@ -57,40 +56,39 @@ class Game{
           * @return     Resultado com sucesso, caso o arquivo contenha niveis validos,
           *             erro, caso contrário
           */
-        Result validate ( std::string filename);
+        Result validate ( std::string filename );
 
         /**
          * @brief      Inicializa os elementos do jogo
          * @param[in]  filename  Nome do arquivo contendo os níveis
          *
          */
-        void initialize (std::string filename);
+        void initialize ( std::string filename );
 
         /**
          * @brief      Processa todos os eventos que ocorrem no jogo
          */
-        void process_events();
+        void process_events ();
 
         /**
          * @brief      Atualiza todas as novas cenas do jogo
          */
-        void update();
+        void update ();
 
         /**
          * @brief      Apresenta ao usuário um screshot da cena atual
          *             em que se encontra o jogo, responsável por imprimir
          *             a snake, labirinto, etc.
          */
-        void render();
+        void render ();
 
         /**
          * @brief      Verifica se o jogo acabou
          *
          * @return     True se não há mais vidas, False caso contrário
          */
-        bool game_over();
+        bool game_over ();
 
 };
-
 
 #endif

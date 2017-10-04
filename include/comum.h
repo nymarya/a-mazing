@@ -35,27 +35,28 @@ enum class direction_t : int
 /**
  * @brief      Direções a se tomar
  */
-struct Direction{
+struct Direction
+{
     int height; //<! 
     int weight; //<! 
 
-    Direction( int h=0, int w=0)
-    :height(h), weight(w)
+    Direction ( int h=0, int w=0 ) : height(h), weight(w)
     {/*empty*/}
 };
 
 /**
  * @brief      define o que é uma posição no mapa
  */
-struct Position{
+struct Position
+{
     size_t roll; //<! linha do mapa 
     size_t col;  //<! coluna do mapa
 
-    Position( size_t r=0, size_t c=0)
-    :roll(r), col(c)
+    Position ( size_t r=0, size_t c=0 ) : roll(r), col(c)
     {/*empty*/}
 
-    Position& operator+(Direction dir){
+    Position& operator+ ( Direction dir )
+    {
         roll += dir.height;
         col += dir.weight;
 
@@ -69,7 +70,7 @@ struct Position{
      *
      * @return     True se iguais, False caso contrário
      */
-    bool operator==( const Position & rhs)
+    bool operator== ( const Position & rhs )
     {
         return (roll == rhs.roll and col == rhs.col);
     }
@@ -81,7 +82,7 @@ struct Position{
      *
      * @return     True se diferentes, False caso contrário
      */
-    bool operator!=( const Position & rhs )
+    bool operator!= ( const Position & rhs )
     {
         return (roll != rhs.roll) or (col != rhs.col);
     }
@@ -93,7 +94,7 @@ struct Position{
      *
      * @return     A nova posição
      */
-    Position & operator=( const Position & rhs )
+    Position & operator= ( const Position & rhs )
     {
         roll = rhs.roll;
         col = rhs.col;
