@@ -47,9 +47,7 @@ struct Move
  */
 class Player
 {
-
 	private:
-		
 		std::vector<direction_t> m_solution; //<! Direções para se chegar a uma solução
 		int m_lifes; //<! quantidade de vidas restates
 
@@ -58,30 +56,29 @@ class Player
 		
 
 	public:
-
 		/**
 		* @brief      Construtor default;
 		*/
-		Player();
+		Player ();
 
 		/**
 		 * @brief      Destrói o objeto
 		 */
-		~Player() = default;
+		~Player () = default;
 
 		/**
 		 * @brief      Faz o jogador ter acesso ao level atual
 		 *
 		 * @param      l_    o level atual
 		 */
-		void bind_level( Level & l_ );
+		void bind_level ( Level & l_ );
 
 		/**
 		 * @brief      Faz o jogador ter acesso a snake
 		 *
 		 * @param      s_   snake
 		 */
-		void bind_snake( Snake & s_ );
+		void bind_snake ( Snake & s_ );
 
 		/**
 		* @brief      Retorna uma direção para a snake que faz parte da 
@@ -89,7 +86,7 @@ class Player
 		*
 		* @return     Uma direção da solução
 		*/
-		direction_t next_move();
+		direction_t next_move ();
 
 		/**
 		* @brief      Procura por um solução para o labirinto
@@ -101,9 +98,8 @@ class Player
 		/**
 		 * @brief      Imprime a solução encontrada pelo player
 		 */
-		void print();
+		void print ();
 
 };
-
 
 #endif
